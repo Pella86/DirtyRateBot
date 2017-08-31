@@ -151,8 +151,7 @@ class Categories:
                 if is_valid_name:
                     # create message
                     
-                    #price = 1000 + int(user.getReputation() / 1000)
-                    price = 0
+                    price = 1000 + int(user.getReputation() / 1000)
                     
                     sdb = {}
                     sdb["catname"] = categoryname

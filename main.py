@@ -1147,30 +1147,49 @@ class TestMessage:
 
 
 
-
-    # update categories media db
+#    print("updating users db")
+#    for data in categories.user_profile_db.values():
+#        user = data.getData()
+#
+#        newuser = UserProfile(user.person)
+#        
+#        
+#
+#        for attr, value in user.__dict__.items():
+#            newuser.__setattr__(attr, user.__getattribute__(attr))
+#        
+#        print(newuser)
+#        
+#        del newuser.person
+#
+#        data.setData(newuser)
+#
+#    categories.user_profile_db.updateDb()  
+#
+#
+#    #update categories media db
 #    print("updating media db")
 #    for data in categories.media_vote_db.values():
 #        content = data.getData()
-#        print(content.upvote)
-#        newcontent = ContentVote(content.uid, content.userprofile, content.content, content.category)
+#        newcontent = ContentVote(content.uid, content.userid, content.content, content.catname)
 #
 #        for attr, value in content.__dict__.items():
 #            newcontent.__setattr__(attr, content.__getattribute__(attr))
-#
+#        
+#        del newcontent.anonymous
+#        del newcontent.cmessageids
+#        
 #        data.setData(newcontent)
 #
 #    categories.media_vote_db.updateDb()
-
-
+#
+#
 #    print("updating categories db")
 #    for data in categories.categories_db.values():
 #        category = data.getData()
 #
 #
 #        newcategory = Category(category.name)
-#        newcategory.calculateScore(categories.media_vote_db)
-#        print(newcategory)
 #
 #        for attr, value in category.__dict__.items():
 #            newcategory.__setattr__(attr, category.__getattribute__(attr))
@@ -1178,32 +1197,6 @@ class TestMessage:
 #        data.setData(newcategory)
 #
 #    categories.categories_db.updateDb()
-
-
-
-#    # update categories media db
-#    print("updating rep db")
-#    for data in categories.user_profile_db.values():
-#        user = data.getData()
-#
-#        user.rep_points = 1
-#        
-#        data.setData(user)
-#
-#    categories.user_profile_db.updateDb()
-
-
-
-#    # update categories media db
-#    print("updating rep db")
-#    for data in categories.user_profile_db.values():
-#        user = data.getData()
-#
-#        user.anonid = user.anonid.upper()
-#        
-#        data.setData(user)
-#
-#    categories.user_profile_db.updateDb()
 
 #%% Inline query functions
 
@@ -1266,57 +1259,6 @@ if __name__ == "__main__":
 
 
     lg.log("- Databases Loaded -", True)
-
-    print("updating users db")
-    for data in categories.user_profile_db.values():
-        user = data.getData()
-
-        newuser = UserProfile(user.person)
-        
-        
-
-        for attr, value in user.__dict__.items():
-            newuser.__setattr__(attr, user.__getattribute__(attr))
-        
-        print(newuser)
-        
-        del newuser.person
-
-        data.setData(newuser)
-
-    categories.user_profile_db.updateDb()  
-
-
-    #update categories media db
-    print("updating media db")
-    for data in categories.media_vote_db.values():
-        content = data.getData()
-        newcontent = ContentVote(content.uid, content.userid, content.content, content.catname)
-
-        for attr, value in content.__dict__.items():
-            newcontent.__setattr__(attr, content.__getattribute__(attr))
-        
-        del newcontent.anonymous
-        del newcontent.cmessageids
-        
-        data.setData(newcontent)
-
-    categories.media_vote_db.updateDb()
-
-
-    print("updating categories db")
-    for data in categories.categories_db.values():
-        category = data.getData()
-
-
-        newcategory = Category(category.name)
-
-        for attr, value in category.__dict__.items():
-            newcategory.__setattr__(attr, category.__getattribute__(attr))
-
-        data.setData(newcategory)
-
-    categories.categories_db.updateDb()
 
     MessageLoop(bot, {'chat': handle,
                      'callback_query': query,
