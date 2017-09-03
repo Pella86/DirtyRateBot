@@ -48,11 +48,11 @@ from telepot.namedtuple import (InlineQueryResultArticle, InputTextMessageConten
 from telepot.exception import TelegramError
 
 #%% initialization telegram ports
-#proxy_url = "http://proxy.server:3128"
-#telepot.api._pools = {
-#    'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
-#}
-#telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=30))
+proxy_url = "http://proxy.server:3128"
+telepot.api._pools = {
+    'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
+}
+telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=30))
 
 #%% constants
 # creator constants
@@ -61,21 +61,21 @@ creator_chatid = 183961724
 
 # bot constants
 class BotDataReader:
-    
+
     def __init__(self):
         self.botfile = "./botdata/bot_data.tbot"
-        
+
         with open(self.botfile, "r") as f:
             dlines = f.readlines()
-        
+
         self.id = int(dlines[0].strip().split("=")[1])
         self.tag = dlines[1].strip().split("=")[1].strip(' "')
         self.token = dlines[2].strip().split("=")[1].strip(' "')
-        
+
         print(self.id)
         print(self.tag)
         print(self.token)
-        
+
 dbot = BotDataReader()
 bot_id = dbot.id
 bot_tag = dbot.tag
@@ -116,35 +116,35 @@ def calc_rep_cost(user, rpq):
     tmp_rep = user.getReputation()
     karma = user.getKarma()
     tmp_rp = user.rep_points
-    
+
     total_cost = 0
     for p in range(1, rpq + 1):
         cost = (tmp_rp)*2 + (tmp_rep/1000)
         tmp_rp += p
         tmp_rep = karma * tmp_rp
         total_cost += cost
-        
+
     print("rp quantity:", rpq, "points cost:",total_cost)
     return int(total_cost)
-   
-            
 
-# %% Handle functions    
+
+
+# %% Handle functions
 #==============================================================================
 # # handle function: Manage received messages
 #==============================================================================
-        
+
 def handle(msg):
-    
+
     mymsg = Message(msg, False)
-    
+
     if mymsg.chat.type == "supergroup" or mymsg.chat.type == "group":
-        
+
         mymsg.initOptionals()
-        
+
         chatid = mymsg.chat.id
         userid = mymsg.mfrom.id
-        
+
         # create a instance of supergroup
         if chatid in supergroupsdb.database:
             dspg = supergroupsdb.getData(chatid)
@@ -154,44 +154,44 @@ def handle(msg):
             spg = SuperGroup(chatid)
             spg.initCategories(categories.categories_db)
             dspg = Data(spg.id, spg)
-            
+
             bot.sendMessage(chatid, "Hello, I'm a bot to share and rate pictures, use the command /vote, admins of this chat can /set_categories which will be shown, for more information talk to me in private.")
-            
+
             supergroupsdb.addData(dspg)
-            supergroupsdb.updateDb()  
-            
-        
+            supergroupsdb.updateDb()
+
+
         # test chat member from telepot.getChatMember(chatid, personid)
         if mymsg.content is not None and mymsg.content.type == "text":
-        
+
             member = ChatMember(bot.getChatMember(chatid, userid))
 
             if member.status == "creator" or member.status == "administrator":
-                
+
                 mymsg.initOptionals()
-                
+
                 # read the texts and use the set_category / cancel_category
                 if mymsg.content.text == "/set_porngore":
                     lg.log("------------ NEW MESSAGE ------------")
                     lg.log("porngore set for group " + str(spg.id))
                     spg.setPornGore()
-                    
+
                     bot.sendMessage(chatid, "The bot will show NSFW content mainly porn and gore.")
                     dspg = Data(spg.id, spg)
                     supergroupsdb.setData(dspg)
                     supergroupsdb.updateDb()
-                    
+
                 elif mymsg.content.text == "/rem_all":
                     lg.log("------------ NEW MESSAGE ------------")
                     lg.log("removed all categories for group " + str(spg.id))
-                    
+
                     spg.remAll()
                     dspg = Data(spg.id, spg)
                     supergroupsdb.setData(dspg)
                     supergroupsdb.updateDb()
-                    
+
                     bot.sendMessage(chatid, "All the categories removed, bot will be silent.")
-                
+
                 elif (spg.wait_category and
                       mymsg.reply is not None and
                       mymsg.reply.content is not None and
@@ -200,9 +200,9 @@ def handle(msg):
                        mymsg.reply.content.text == rem_categories_request_msg
                        )
                    ):
-                    
+
                     usermsg = mymsg.content.text
-                    
+
                     catnames = usermsg.strip().split(",")
                     catnames = map(str.strip, catnames)
                     cs = []
@@ -216,21 +216,21 @@ def handle(msg):
                         if cs:
                             catstr = "".join([catname+" | " for catname in cs])[:-3]
                             valmsg = "The bot will NOT show media from: " + catstr
-                    
+
                     if not cs:
-                        valmsg = "No valid category detected"                    
-                    
+                        valmsg = "No valid category detected"
+
                     bot.sendMessage(chatid, valmsg)
-                    
+
                     spg.wait_category = False
-                    
+
                     dspg = Data(spg.id, spg)
                     supergroupsdb.setData(dspg)
-                    supergroupsdb.updateDb()                        
+                    supergroupsdb.updateDb()
                     lg.log("------------ NEW MESSAGE ------------")
-                    
+
                     lg.log("user in group: " + str(spg.id) + " tried to add " + mymsg.reply.content.text)
-                
+
                 elif mymsg.content.text == "/set_categories":
                     lg.log("------------ NEW MESSAGE ------------")
                     lg.log("called set category in group" + str(spg.id))
@@ -248,51 +248,51 @@ def handle(msg):
                     frep = ForceReply()
                     bot.sendMessage(chatid, text=rem_categories_request_msg, parse_mode="HTML", reply_markup=frep)
                     spg.wait_category = True
-                    
+
                 elif mymsg.content.text == "/set_kinky":
                     lg.log("------------ NEW MESSAGE ------------")
                     lg.log("called set kinky in group" + str(spg.id))
                     spg.setKinky()
-                    
+
                     bot.sendMessage(chatid, "The bot will show NSFW content from the categories boobs, booty, bdsm, hentai, lesbian.")
-                    
+
                     dspg = Data(spg.id, spg)
                     supergroupsdb.setData(dspg)
-                    supergroupsdb.updateDb()  
-                
+                    supergroupsdb.updateDb()
+
                 elif mymsg.content.text == "/set_all":
                     lg.log("------------ NEW MESSAGE ------------")
                     lg.log("called set all in group" + str(spg.id))
                     spg.setAll()
                     bot.sendMessage(chatid, "The bot will show NSFW content from the all the categories.")
-                    
+
                     dspg = Data(spg.id, spg)
                     supergroupsdb.setData(dspg)
-                    supergroupsdb.updateDb()  
+                    supergroupsdb.updateDb()
 
                 elif mymsg.content.text == "/reset_all":
                     lg.log("------------ NEW MESSAGE ------------")
                     lg.log("called reset category in group" + str(spg.id))
                     spg.initCategories(categories.categories_db)
                     bot.sendMessage(chatid, "The bot will show content (SFW) from categories nature space and meme.")
-                    
+
                     dspg = Data(spg.id, spg)
                     supergroupsdb.setData(dspg)
-                    supergroupsdb.updateDb() 
-            
+                    supergroupsdb.updateDb()
+
             if mymsg.content.text.startswith("/vote"):
                 lg.log("------------ NEW MESSAGE ------------")
                 # just get a random media and show it
                 print("vote called.")
                 # get all non deleted medias
-                spg.sendMedia(categories)                
+                spg.sendMedia(categories)
 
 
     # remember the files uploaded to the bot
     if mymsg.chat.type == "private":
         lg.log("------------ NEW MESSAGE ------------")
         mymsg.initOptionals()
-        
+
         # is the person in the userprofiledb?
         if categories.user_profile_db.isNew(mymsg.mfrom):
             lg.log("New profile created")
@@ -310,9 +310,9 @@ def handle(msg):
             lg.log(str(user.person) + "is banned")
             bot.sendMessage(mymsg.chat.id, _("You are banned prot!"))
         else:
-            
+
             cat_req = categories.new_cat_req.get(mymsg.chat.id)
-            if cat_req is not None and cat_req[0]:   
+            if cat_req is not None and cat_req[0]:
                 lg.log("create category: get category")
                 categories.getCategoryName(mymsg)
 
@@ -332,9 +332,9 @@ def handle(msg):
                 print("got media..")
                 user.tmp_content["media"] = mymsg.content
                 categories.getupload[mymsg.chat.id] = True
-                
+
                 categories.getuploadMedia[mymsg.chat.id] = "success"
-                
+
                 categories.sendUploadCategory(mymsg)
 
 
@@ -343,30 +343,30 @@ def handle(msg):
                 if mymsg.content.text == "/add_category":
                     lg.log("requested add category")
                     categories.addCategory(mymsg.chat.id)
-                
+
                 elif mymsg.content.text.startswith("/categories"):
                     # send the categories page
                     lg.log("requested categories")
                     categories.sendSelectCategoryMenu(mymsg.chat.id, sort=True, menu=True, user=user)
-                
+
                 elif mymsg.content.text == "/top_media":
                     categories.sendSelectCategoryMenu(mymsg.chat.id, sort=True, topmedia=True, user=user)
-                
+
                 elif mymsg.content.text == "/set_nickname":
                     user.tmp_nickname = True
                     bot.sendMessage(mymsg.chat.id, _("Please send your nickname, the nickname must be minumum 3 characters and maximum 15, it can contain only alphanumeric characters (a-z, A-Z, 0-9)", user.lang_tag))
-                
+
                 elif user.tmp_nickname:
                     nickname = mymsg.content.text
                     success = categories.checkNickname(mymsg.chat.id, user, nickname)
-                    
+
                     if success:
                         lg.log("User changed nickname " + nickname)
                     else:
                         categories.sendMainMenu(mymsg.chat.id, user)
 
                 elif mymsg.content.text.startswith("/help"):
-                    
+
                     #split the content
 
                     command = mymsg.content.text.split('_')
@@ -378,9 +378,9 @@ def handle(msg):
 
                         help_msg = Helpmsg.help_msg(__version__, user.lang_tag)
                         bot.sendMessage(mymsg.chat.id, help_msg, parse_mode = "HTML")
-                    
+
                     elif command_length == 2:
-                        
+
                         helpcat = command[1]
 
                         if helpcat == "karma":
@@ -393,14 +393,14 @@ def handle(msg):
                             lg.log("requested help points")
                             help_msg = Helpmsg.help_msg_points(user.lang_tag)
                             bot.sendMessage(mymsg.chat.id, help_msg, parse_mode = "HTML")
-                            
+
                         elif helpcat == "reputation":
                             lg.log("requested help reputation")
                             #send help reputation message
                             help_msg = Helpmsg.help_msg_reputation(user.lang_tag)
 
                             bot.sendMessage(mymsg.chat.id, help_msg, parse_mode = "HTML")
-                        
+
                         elif helpcat == "upload":
                             lg.log("requested help upload")
                             help_msg = Helpmsg.help_msg_upload(user.lang_tag)
@@ -515,11 +515,11 @@ def handle(msg):
                 elif mymsg.content.text.startswith("/user_top"):
                     lg.log("requested top")
                     categories.sendUserTop(mymsg.chat.id, ['reputation', 'karma'], user)
-                
-                
-                    
+
+
+
                 elif mymsg.content.text.startswith("/vote"):
-                    
+
                     if mymsg.content.text.startswith("/vote_"):
                         categoryname = "".join(mymsg.content.text.split("_")[1:])
                         lg.log("requested vote for: " + categoryname)
@@ -527,33 +527,33 @@ def handle(msg):
                     else:
                         # pick a random category name
                         categorylist = categories.categories_db.values()
-                        
+
                         # check if category contains media
                         catnameslist = []
                         for dcat in categorylist:
                             cat = dcat.getData()
                             if cat.getMediaList(categories.media_vote_db):
                                 catnameslist.append(cat.name)
-                                
+
                         print(catnameslist)
-                                
+
                         if catnameslist:
                             random.shuffle(catnameslist)
-                            
+
                             catname = catnameslist[0]
-                            
+
                             while catnameslist:
                                 print(catnameslist)
                                 medialist = []
                                 for dmedia in categories.media_vote_db.values():
-                                    
+
                                     media = dmedia.getData()
                                     if media.catname == catname and media.id not in user.dont_show_pics_id and not media.deleted and user.id not in media.votersids:
                                         medialist.append(media)
-                        
+
                                 nmediacat = len(medialist)
                                 print(nmediacat)
-                                
+
                                 if nmediacat == 0:
                                     catnameslist.pop(0)
                                     if catnameslist:
@@ -564,23 +564,23 @@ def handle(msg):
                                     break
 
                             lg.log("requested vote for: " + catname)
-                            categories.voteCategoryPrivate(mymsg.chat.id, user, catname)                        
+                            categories.voteCategoryPrivate(mymsg.chat.id, user, catname)
                         else:
                             bot.sendMessage(mymsg.chat.id, "All categories have no media")
                             lg.log("All categories have no media")
-                        
+
 
                 elif mymsg.content.text.startswith("/main_menu"):
                     lg.log("requested main menu")
                     categories.sendMainMenu(mymsg.chat.id, user)
-                    
+
                 elif mymsg.content.text.startswith("/buy_reputation"):
                     print("requested buy reputation")
                     param = mymsg.content.text.split("_")[2:]
                     print(param)
                     if len(param) == 0:
                         user.sendBuyReputation(mymsg.chat.id, bot)
-                
+
                 elif mymsg.content.text == "/print_user_list"  and user.id == creator_id:
                     categories.printUserList()
                 else:
@@ -589,11 +589,11 @@ def handle(msg):
             else:
                 lg.log("requested main menu")
                 categories.sendMainMenu(mymsg.chat.id, user)
-        
+
         data = Data(mymsg.mfrom.id, mymsg.mfrom)
         if usersdb.isNew(data):
             lg.log("Added to userdb new user:" + str(mymsg.mfrom.id))
-            usersdb.addData(data)        
+            usersdb.addData(data)
         # Add contents to databases
         if mymsg.content is not None and mymsg.content.file_id is not None:
             data = None
@@ -607,20 +607,20 @@ def handle(msg):
             else:
                 lg.log("content is already present")
         usersdb.updateDb()
-        
-        contentsdb.updateDb()        
+
+        contentsdb.updateDb()
 
 
-    
+
     data = Data(mymsg.chat.id, mymsg.chat)
     if chatsdb.isNew(data):
         chatsdb.addData(data)
-        
+
     chatsdb.updateDb()
 
 
 
- 
+
 #==============================================================================
 # # handle function: Manage received messages
 #==============================================================================
@@ -630,7 +630,7 @@ def query(msg):
 
     lg.log("------------ NEW QUERY ------------")
     lg.startTimer()
-    
+
 
     query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
     print('Callback Query:', query_id, from_id, query_data)
@@ -653,23 +653,23 @@ def query(msg):
                 if person.id not in media.votersids:
                     send_user_found = False
                     cbquery = CbkQuery(msg)
-                    
+
                     if query_data.startswith("v_like_"):
                         print(person.id, "upvoted")
                         bot.answerCallbackQuery(query_id, text="Up vote")
-                        
+
                         prev_media_score = media.getScore()
 
                         # update the media
                         media.upvote += 1
-                        
+
                         post_media_score = media.getScore()
-                        
+
                         #update the category score
                         category = media.getCategory(categories.categories_db)
-                        
+
                         category.score = category.score - prev_media_score + post_media_score
-                        
+
                         dcategory = Data(category.name, category)
                         categories.categories_db.setData(dcategory)
                         categories.categories_db.updateDb()
@@ -677,7 +677,7 @@ def query(msg):
                         # update the uploader
                         upuser = media.getUser(categories.user_profile_db)
                         upuser.points += 1
-                        upuser.karma = upuser.getKarma() - prev_media_score + post_media_score 
+                        upuser.karma = upuser.getKarma() - prev_media_score + post_media_score
                         nottag = media.catname + "-vote"
                         message = ("Your media got a {3} you earned 1{2}\n"
                                    "Show media (/show_{0}_{1})\n"
@@ -701,23 +701,23 @@ def query(msg):
                                     bot.sendMessage(user.getChatID(chatsdb), "You earned 1" + em.points_emoji + " /profile")
                                     send_user_found = True
                                     break
-                                
+
                     elif query_data.startswith("v_dislike_"):
                         print(person.id, "downvoted")
                         bot.answerCallbackQuery(query_id, text="Down vote")
-                        
+
                         prev_media_score = media.getScore()
 
                         # update the media
                         media.downvote += 1
-                        
+
                         post_media_score = media.getScore()
 
                         #update the category score
                         category = media.getCategory(categories.categories_db)
-                        
+
                         category.score = category.score - prev_media_score + post_media_score
-                        
+
                         dcategory = Data(category.name, category)
                         categories.categories_db.setData(dcategory)
                         categories.categories_db.updateDb()
@@ -751,7 +751,7 @@ def query(msg):
                                     bot.sendMessage(user.getChatID(chatsdb), "You voted a media you earned 1" + em.points_emoji)
                                     send_user_found = True
                                     break
-                            
+
                     media.votersids.append(person.id)
 
                     dmedia.setData(media)
@@ -762,44 +762,44 @@ def query(msg):
                     elif cbquery.message.chat.type == "supergroup" or cbquery.query_msg.chat.type == "group":
                         keyboard = media.makeKeyboardVotePublic()
                         bot.editMessageReplyMarkup(cbquery.getChatMsgID(), keyboard)
-                    
+
                     if send_user_found:
                         categories.voteCategoryPrivate(user.getChatID(chatsdb), user, media.catname)
-                    
+
                 else:
                     bot.answerCallbackQuery(query_id, text='Already voted')
-                    
+
         categories.media_vote_db.updateDb()
 
     elif query_data.startswith("report_"):
         # find my chat in the database
-        
+
         # get the category creator
-        
+
         print("--report--")
-        
+
         for dchat in chatsdb.values():
             chat = dchat.getData()
             if chat.type == "private" and chat.person.id == creator_id:
                 creator_chatid = chat.id
                 break
-        
-        print(query_data) 
-        
+
+        print(query_data)
+
         param = query_data.split("_")
 
         uid = param[1]
-        
+
         if uid == "cat":
             catname = param[2]
             print(catname)
             category = categories.categories_db.getData(catname).getData()
             category.sendAdmin(creator_chatid, categories)
             bot.answerCallbackQuery(query_id, text="REPORTED")
-            
-        else:        
+
+        else:
             uid = int(uid)
-    
+
             for dmedia in categories.media_vote_db.values():
                 media = dmedia.getData()
                 if media.uid == uid:
@@ -809,16 +809,16 @@ def query(msg):
                         break
                     else:
                         bot.answerCallbackQuery(query_id, text="REPORTED")
-                        
+
                         media.reported_by.append(person.id)
                         print(person, "reported")
-                        
+
                         # send to creator
                         bot.sendMessage(creator_chatid, "Report from: " + str(person))
                         media.sendAdmin(creator_chatid, bot, categories.user_profile_db, ban_keyboard=True, catManager=categories)
-                        
+
                         # get the category creator
-                        
+
                         cat = categories.categories_db.getData(media.catname).getData()
                         cat_creator_id = cat.creator
                         chatid_cat_creator = None
@@ -832,15 +832,15 @@ def query(msg):
                             print("chat id", chatid_cat_creator)
                             if chatid_cat_creator is not None:
                                 bot.sendMessage(chatid_cat_creator, "Report from: " + str(person))
-                                media.sendAdmin(chatid_cat_creator, bot, categories.user_profile_db, catManager=categories)                                
-                        
+                                media.sendAdmin(chatid_cat_creator, bot, categories.user_profile_db, catManager=categories)
+
                         break
 
     elif query_data.startswith("delete_"):
         bot.answerCallbackQuery(query_id, text="deleted")
         param = query_data.split("_")
         uid = param[1]
-        
+
         if uid == "cat":
             catname = param[2]
             category = categories.categories_db.getData(catname).getData()
@@ -911,7 +911,7 @@ def query(msg):
                 user.banned = False
 
                 duser.setData(user)
-                categories.user_profile_db.updateDb()            
+                categories.user_profile_db.updateDb()
 
     elif query_data.startswith("mute_"):
         commands = query_data.split("_", maxsplit = 2)
@@ -931,17 +931,17 @@ def query(msg):
             categories.user_profile_db.updateDb()
         else:
             bot.answerCallbackQuery(query_id, text= nottag + " already muted")
-    
+
     elif query_data.startswith("cmp"):
         args = query_data.split("_", maxsplit = 1)[1:]
         page = int(args[0])
-        
+
         cbkquery = CbkQuery(msg)
-        
+
         topmedia = False
         menu = False
         user = None
-        
+
         if query_data.startswith("cmps_"):
             pass
         elif query_data.startswith("cmptm_"):
@@ -950,12 +950,12 @@ def query(msg):
         else:
             menu = True
             user = categories.user_profile_db.getData(cbkquery.person.id).getData()
-            
-        
+
+
         try:
             categories.sendSelectCategoryMenu(cbkquery.getChatMsgID(), ipage=page, sort=True, menu=menu, topmedia=topmedia, user=user )
             bot.answerCallbackQuery(query_id, text ="Page " + str(page))
-            
+
         except TelegramError as e:
             if e.error_code == 400:
                 if page == 1:
@@ -964,7 +964,7 @@ def query(msg):
                     bot.answerCallbackQuery(query_id, text ="Reached last page")
             else:
                 raise e
-       
+
     elif query_data.startswith("buy_"):
         param = query_data.split("_", maxsplit = 1)[1:]
         if len(param) == 0:
@@ -972,7 +972,7 @@ def query(msg):
             print(query_data)
         else:
             cb_query = CbkQuery(msg)
-            user = categories.user_profile_db.getData(from_id).getData()                        
+            user = categories.user_profile_db.getData(from_id).getData()
             param = param[0].split("_", maxsplit = 1)
             print(param)
             if param[0] == "calcp":
@@ -984,18 +984,18 @@ def query(msg):
                 try:
                     points = int(param)
                     is_int = True
-                
+
                 except ValueError:
                     print("param is not int", param)
-                    
+
                 except Exception as e:
                     print("Pella: Unknown error")
                     print(e)
-                    raise e   
-                
+                    raise e
+
                 if is_int:
                     total_cost = points
-                        
+
                     if total_cost > user.points:
                         bot.sendMessage(user.getChatID(chatsdb), text = not_enoug_money_msg)
                         bot.answerCallbackQuery(query_id, text = "Not enough money")
@@ -1006,43 +1006,43 @@ def query(msg):
                             user.points -= total_cost
                             user.dayuploads = 0
                             user.firstuploadtime = datetime.datetime.now()
-                            
+
                             # update user db
                             duser = Data(user.id, user)
                             categories.user_profile_db.setData(duser)
                             categories.user_profile_db.updateDb()
-                            
+
                             # send relative messages and callbacks / edit the previous message
                             # with the new prices
                             bot.sendMessage(user.getChatID(chatsdb), text = "You have now 5 more uploads")
-                            bot.answerCallbackQuery(query_id, text = "Bough uploads, great deal!")                
-                                
-                
+                            bot.answerCallbackQuery(query_id, text = "Bough uploads, great deal!")
+
+
             elif param[0] == "rp":
                 param = param[1]
                 cb_query = CbkQuery(msg)
                 user = categories.user_profile_db.getData(from_id).getData()
                 if from_id in categories.user_profile_db.database:
-                    
+
                     print("points: ", user.points)
                     print("rep points:", user.rep_points)
-                    
-                    
+
+
                     is_int = False
                     try:
                         rp = int(param[0])
                         is_int = True
-                    
+
                     except ValueError:
                         print("param is not int", param)
                     except Exception as e:
                         print("Unknown error")
                         print(e)
                         raise e
-                    
+
                     if is_int:
                         total_cost = calc_rep_cost(user, rp)
-                        
+
                         if total_cost > user.points:
                             bot.sendMessage(user.getChatID(chatsdb), text = not_enoug_money_msg)
                             bot.answerCallbackQuery(query_id, text = "Not enough money")
@@ -1050,60 +1050,66 @@ def query(msg):
                             # update the user status
                             user.points -= total_cost
                             user.rep_points += rp
-                            
+
                             # update user db
                             duser = Data(user.id, user)
                             categories.user_profile_db.setData(duser)
                             categories.user_profile_db.updateDb()
-                            
+
                             # send relative messages and callbacks / edit the previous message
                             # with the new prices
                             bot.sendMessage(user.getChatID(chatsdb), text = "You bought " + str(em.RPstr(rp)) + "\nYou now have a reputation of " + str(user.getReputationStr()))
                             user.sendBuyReputation(cb_query.getChatMsgID(), bot, edit=True)
-                            bot.answerCallbackQuery(query_id, text = "Bough reputation, great deal!")                
-            
+                            bot.answerCallbackQuery(query_id, text = "Bough reputation, great deal!")
+
     elif query_data.startswith("createcat_"):
         # split the query data
         catd = query_data.split("_")
         user = categories.user_profile_db.getData(from_id).getData()
         chatid = user.getChatID(chatsdb)
-        
+
         catname = catd[1]
-        
+
         cattag = tags.tag_from_string(catd[2])
-        
+
         price = int(catd[3])
-        
+
         print("New category query:", catd, catname, cattag, user)
-        
+
         category = Category(catname, cattag, user.id)
-        
+
         data = Data(category.name, category)
         if categories.categories_db.isNew(data):
             if user.points >= price:
                 categories.categories_db.addData(data)
                 categories.categories_db.updateDb()
-                
+
                 categories.user_profile_db.updateDb()
-                
+
                 categories.new_cat_req[chatid] = (False, False)
-                
+
+                user.points -= price
+
+                duser = Data(user.id, user)
+                categories.user_profile_db.addData(duser)
+                categories.user_profile_db.updateDb()
+
                 bot.sendMessage(chatid, _("Category successfully created\n/main_menu", user.lang_tag))
                 bot.answerCallbackQuery(query_id, text = _("Category Created", user.lang_tag))
                 print("category", category.name, "has been successfully created by:", user.anonid)
             else:
                 categories.new_cat_req[chatid] = (False, False)
                 bot.sendMessage(chatid, _("You don't have enough money, /help_points", user.lang_tag))
-                bot.answerCallbackQuery(query_id, text = _("You hobo", user.lang_tag))               
+                bot.answerCallbackQuery(query_id, text = _("You hobo", user.lang_tag))
         else:
             categories.new_cat_req[chatid] = (False, False)
             bot.sendMessage(chatid, _("Category already present\n/main_menu", user.lang_tag))
-            bot.answerCallbackQuery(query_id, text = _("Category already present", user.lang_tag))  
+            bot.answerCallbackQuery(query_id, text = _("Category already present", user.lang_tag))
 
     else:
         bot.answerCallbackQuery(query_id, text='what?')
         print("not my query")
-        
+
     lg.log("- Operation done -", time_sub = True)
 
 #%%Test message
@@ -1187,7 +1193,7 @@ class TestMessage:
 #        user = data.getData()
 #
 #        user.rep_points = 1
-#        
+#
 #        data.setData(user)
 #
 #    categories.user_profile_db.updateDb()
@@ -1200,7 +1206,7 @@ class TestMessage:
 #        user = data.getData()
 #
 #        user.anonid = user.anonid.upper()
-#        
+#
 #        data.setData(user)
 #
 #    categories.user_profile_db.updateDb()
@@ -1221,7 +1227,7 @@ def on_inline_query(msg):
                    )]
 
         return articles
-    
+
     answerer.answer(msg, compute)
 
 def on_chosen_inline_result(msg):
@@ -1250,12 +1256,10 @@ if __name__ == "__main__":
     contentsdb = Database("./data/contents_db/")
     print("Loading contents db")
     contentsdb.loadDb()
-    
+
     supergroupsdb = Database("./data/supergroups_db/")
     print("Loading supergroups db")
     supergroupsdb.loadDb()
-
-
 
 
 
@@ -1267,62 +1271,12 @@ if __name__ == "__main__":
 
     lg.log("- Databases Loaded -", True)
 
-    print("updating users db")
-    for data in categories.user_profile_db.values():
-        user = data.getData()
-
-        newuser = UserProfile(user.person)
-        
-        
-
-        for attr, value in user.__dict__.items():
-            newuser.__setattr__(attr, user.__getattribute__(attr))
-        
-        print(newuser)
-        
-        del newuser.person
-
-        data.setData(newuser)
-
-    categories.user_profile_db.updateDb()  
-
-
-    #update categories media db
-    print("updating media db")
-    for data in categories.media_vote_db.values():
-        content = data.getData()
-        newcontent = ContentVote(content.uid, content.userid, content.content, content.catname)
-
-        for attr, value in content.__dict__.items():
-            newcontent.__setattr__(attr, content.__getattribute__(attr))
-        
-        del newcontent.anonymous
-        del newcontent.cmessageids
-        
-        data.setData(newcontent)
-
-    categories.media_vote_db.updateDb()
-
-
-    print("updating categories db")
-    for data in categories.categories_db.values():
-        category = data.getData()
-
-
-        newcategory = Category(category.name)
-
-        for attr, value in category.__dict__.items():
-            newcategory.__setattr__(attr, category.__getattribute__(attr))
-
-        data.setData(newcategory)
-
-    categories.categories_db.updateDb()
-
     MessageLoop(bot, {'chat': handle,
                      'callback_query': query,
+                     'chosen_inline_result': on_chosen_inline_result
+
                      }
                 ).run_as_thread()
-    
 
     print ('Listening ...')
 
