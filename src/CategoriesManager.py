@@ -111,12 +111,23 @@ class Categories:
         self.bot.sendMessage(chatid, m, parse_mode = "HTML")
     
 
-    def addCategory(self, chatid):
+    def addCategory(self, chatid, user):
         # chatid must be private, checked in the handle
         self.sendSelectCategoryMenu(chatid, sort=True)
         
+        sdb = {}
+        sdb["price"] = em.Pstr(1000 + int(user.getReputation() / 1000), True)
+        sdb["points"] = user.getPointStr(True)
+        
         m = "Send a category name\n"
-        m += "<i>The name must be maximum 15 characters long and can contain only alphanumeric characters (a-b and 1-10)</i>"
+        m += "<i>The name must be maximum 15 characters long and can contain only alphanumeric characters (a-b and 1-10)</i>\n"
+        
+        m += "\n"
+        m += "Create a category will cost {price} you have {points}\n"
+        
+        m = _(m, user.lang_tag)
+        
+        m = m.format(sdb)
         
         self.bot.sendMessage(chatid, m, parse_mode="HTML")
         self.new_cat_req[chatid] = (True, False)

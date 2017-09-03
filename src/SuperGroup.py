@@ -94,8 +94,13 @@ class SuperGroup:
         for dmedia in catManager.media_vote_db.values():
             media = dmedia.getData()
             category = catManager.categories_db.getData(media.catname).getData()
-            if not media.deleted and self.catsettings[media.catname] and not category.deleted:
-                medialist.append(media)
+            try:
+                if not media.deleted and self.catsettings[media.catname] and not category.deleted:
+                    medialist.append(media)
+            except KeyError:
+                self.catsettings[media.catname] = False
+            except Exception as e:
+                raise e
         
         if medialist:
             cmedia = random.choice(medialist)
