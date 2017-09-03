@@ -8,18 +8,18 @@ Created on Fri Aug 25 09:36:05 2017
 import random
 
 class SuperGroup:
-    
+
     def __init__(self, chatid):
         self.id = chatid
 
         # default categories
         self.catsettings = {}
         self.wait_category = False
-   
+
     def initCategories(self, catdb):
         for catname in catdb.keys():
             self.catsettings[catname] = False
-        
+
         # set the defaults
         self.catsettings["nature"] = True
         self.catsettings["meme"] = True
@@ -31,7 +31,7 @@ class SuperGroup:
             if not cat.deleted:
                 self.catsettings[catname] = True
             return catname
-    
+
     def delCategory(self, catname, catdb):
         if catname in catdb.database:
             self.catsettings[catname] = False
@@ -44,7 +44,7 @@ class SuperGroup:
             if cn is not None:
                 switchedon.append(cn)
         return switchedon
-    
+
     def remCategories(self, catnames, catdb):
         switchedoff = []
         for name in catnames:
@@ -52,14 +52,14 @@ class SuperGroup:
             if cn is not None:
                 switchedoff.append(cn)
         return switchedoff
-    
+
     def getChat(self, chatdb):
         dchat = chatdb.getData(self.id)
         return dchat.getData()
-    
+
     def sendPickCategories(self, categories):
         categories.sendSelectCategoryMenu(self.id, sort=True)
-    
+
     def setKinky(self):
         self.catsettings["boobs"] = True
         self.catsettings["booty"] = True
@@ -70,7 +70,7 @@ class SuperGroup:
     def setPornGore(self):
         self.catsettings["nature"] = False
         self.catsettings["meme"] = False
-        self.catsettings["space"] = False       
+        self.catsettings["space"] = False
         self.catsettings["dicks"] = False
         self.catsettings["gay"] = False
         self.catsettings["random"] = False
@@ -78,17 +78,17 @@ class SuperGroup:
         self.catsettings["booty"] = True
         self.catsettings["bdsm"] = True
         self.catsettings["hentai"] = True
-        self.catsettings["lesbian"] = True 
+        self.catsettings["lesbian"] = True
         self.catsettings["gore"] = True
-    
+
     def setAll(self):
         for key, value in self.catsettings.items():
             self.catsettings[key] = True
-    
+
     def remAll(self):
         for key, value in self.catsettings.items():
-            self.catsettings[key] = False        
-            
+            self.catsettings[key] = False
+
     def sendMedia(self, catManager):
         medialist = []
         for dmedia in catManager.media_vote_db.values():
@@ -99,9 +99,11 @@ class SuperGroup:
                     medialist.append(media)
             except KeyError:
                 self.catsettings[media.catname] = False
+                if not media.deleted and self.catsettings[media.catname] and not category.deleted:
+                    medialist.append(media)
             except Exception as e:
                 raise e
-        
+
         if medialist:
             cmedia = random.choice(medialist)
             cmedia.showMediaVotePublic(self.id, catManager)
