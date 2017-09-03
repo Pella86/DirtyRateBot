@@ -1089,7 +1089,6 @@ def query(msg):
                 categories.new_cat_req[chatid] = (False, False)
 
                 user.points -= price
-
                 duser = Data(user.id, user)
                 categories.user_profile_db.addData(duser)
                 categories.user_profile_db.updateDb()
@@ -1153,30 +1152,49 @@ class TestMessage:
 
 
 
-
-    # update categories media db
+#    print("updating users db")
+#    for data in categories.user_profile_db.values():
+#        user = data.getData()
+#
+#        newuser = UserProfile(user.person)
+#
+#
+#
+#        for attr, value in user.__dict__.items():
+#            newuser.__setattr__(attr, user.__getattribute__(attr))
+#
+#        print(newuser)
+#
+#        del newuser.person
+#
+#        data.setData(newuser)
+#
+#    categories.user_profile_db.updateDb()
+#
+#
+#    #update categories media db
 #    print("updating media db")
 #    for data in categories.media_vote_db.values():
 #        content = data.getData()
-#        print(content.upvote)
-#        newcontent = ContentVote(content.uid, content.userprofile, content.content, content.category)
+#        newcontent = ContentVote(content.uid, content.userid, content.content, content.catname)
 #
 #        for attr, value in content.__dict__.items():
 #            newcontent.__setattr__(attr, content.__getattribute__(attr))
 #
+#        del newcontent.anonymous
+#        del newcontent.cmessageids
+#
 #        data.setData(newcontent)
 #
 #    categories.media_vote_db.updateDb()
-
-
+#
+#
 #    print("updating categories db")
 #    for data in categories.categories_db.values():
 #        category = data.getData()
 #
 #
 #        newcategory = Category(category.name)
-#        newcategory.calculateScore(categories.media_vote_db)
-#        print(newcategory)
 #
 #        for attr, value in category.__dict__.items():
 #            newcategory.__setattr__(attr, category.__getattribute__(attr))
@@ -1185,6 +1203,7 @@ class TestMessage:
 #
 #    categories.categories_db.updateDb()
 
+<<<<<<< HEAD
 
 
 #    # update categories media db
@@ -1211,6 +1230,8 @@ class TestMessage:
 #
 #    categories.user_profile_db.updateDb()
 
+=======
+>>>>>>> 03628c784d71b10392b1b36a4d0a8056f6b0ec14
 #%% Inline query functions
 
 def on_inline_query(msg):
@@ -1262,7 +1283,10 @@ if __name__ == "__main__":
     supergroupsdb.loadDb()
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 03628c784d71b10392b1b36a4d0a8056f6b0ec14
     bot = telepot.Bot(bot_token)
     answerer = telepot.helper.Answerer(bot)
 
