@@ -1203,7 +1203,7 @@ class TestMessage:
 #
 #    categories.categories_db.updateDb()
 
-<<<<<<< HEAD
+
 
 
 #    # update categories media db
@@ -1230,8 +1230,7 @@ class TestMessage:
 #
 #    categories.user_profile_db.updateDb()
 
-=======
->>>>>>> 03628c784d71b10392b1b36a4d0a8056f6b0ec14
+
 #%% Inline query functions
 
 def on_inline_query(msg):
@@ -1283,10 +1282,7 @@ if __name__ == "__main__":
     supergroupsdb.loadDb()
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 03628c784d71b10392b1b36a4d0a8056f6b0ec14
     bot = telepot.Bot(bot_token)
     answerer = telepot.helper.Answerer(bot)
 
