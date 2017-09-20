@@ -20,7 +20,7 @@ import time
 import pickle
 import datetime
 import urllib3
-
+import datetime
 import random
 
 
@@ -44,8 +44,11 @@ import CategoryTags as tags
 import telepot
 from telepot.loop import MessageLoop
 from telepot.namedtuple import (InlineQueryResultArticle, InputTextMessageContent,
-                                ForceReply)
+                                ForceReply,InlineKeyboardMarkup,
+                                InlineKeyboardButton)
 from telepot.exception import TelegramError
+
+
 
 #%% initialization telegram ports
 proxy_url = "http://proxy.server:3128"
@@ -330,19 +333,41 @@ def handle(msg):
             elif mymsg.content_type in VALID_MEDIA:
                 # set the user requests as valid
                 print("got media..")
-                user.tmp_content["media"] = mymsg.content
-                categories.getupload[mymsg.chat.id] = True
+                if user.canUpload():
+                    user.tmp_content["media"] = mymsg.content
+                    categories.getupload[mymsg.chat.id] = True
 
-                categories.getuploadMedia[mymsg.chat.id] = "success"
+                    categories.getuploadMedia[mymsg.chat.id] = "success"
 
-                categories.sendUploadCategory(mymsg)
+                    categories.sendUploadCategory(mymsg)
+                else:
+                    dtime = datetime.timedelta(days = 1) - (datetime.datetime.now() - user.firstuploadtime)
+                    print(dtime, "\n")
+
+                    minutes, seconds = divmod(dtime.seconds, 60)
+                    hours, minutes = divmod(minutes, 60)
+
+                    cost = int(100 + user.getReputation()/1000)
+                    button_buyups = InlineKeyboardButton(
+
+                    text='buy 5 uploads for' + str(em.Pstr(cost)),
+                    callback_data='buy_uploads_' + str(cost)
+                     )
+                    keyboard = InlineKeyboardMarkup(
+                    inline_keyboard=[[button_buyups],]
+                    )
+                    rmk = keyboard
+
+                    bot.sendMessage(mymsg.chat.id, "Max upload reached! Missing {0}h and {1}m\nYou currently have {2}".format(hours, minutes, user.getPointsStr()), reply_markup = rmk)
+                    print("max upload reached")
+
 
 
             elif mymsg.content is not None and mymsg.content.type == "text":
 
                 if mymsg.content.text == "/add_category":
                     lg.log("requested add category")
-                    categories.addCategory(mymsg.chat.id)
+                    categories.addCategory(mymsg.chat.id, user)
 
                 elif mymsg.content.text.startswith("/categories"):
                     # send the categories page
