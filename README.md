@@ -54,7 +54,7 @@ The profile menu allows a customization of the user profile.
 * The user top chart: users are listed in order of reputation and karma
 
 ### The top chart
-![categories menu](/README_data/Screenshot_4.png)
+![categories menu](/README_data/photo_2017-09-21_00-05-36.jpg)
 
 The users are presented in order of reputation, the reputation can be gained in the profile section, karma and reputation points help to reach the top
 
