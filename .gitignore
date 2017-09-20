@@ -1,0 +1,7 @@
+# data and pycache
+
+__pycache__/
+data/
+src/__pycache__/
+botdata/
+logs/
