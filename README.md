@@ -1,4 +1,5 @@
-# DirtyRateBot _`(v. 0.1.0)`_
+# DirtyRateBot 
+#### _`(v. 0.1.0)`_
 Telegram bot that allows people to share pictures, gifs and videos and other people can rate them.
 
 https://t.me/DirtyRateBot
