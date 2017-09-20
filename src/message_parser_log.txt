@@ -1,0 +1,327 @@
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 09:35
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 09:36
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 09:38
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 09:40
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 09:44
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 09:45
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 09:48
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 09:49
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:01
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:02
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:12
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:14
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:16
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:20
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:20
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:44
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:44
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:44
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:45
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:46
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 10:47
+=============================================================
+=============================================================
+Message Parser program started the 23 of Jul 2017 at 11:01
+=============================================================
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:05
+=============================================================
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:29
+=============================================================
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:29
+=============================================================
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:29
+=============================================================
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:30
+=============================================================
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:31
+=============================================================
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:31
+=============================================================
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:35
+=============================================================
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:35
+=============================================================
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:42
+=============================================================
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:43
+=============================================================
+processing took: 
+Elapsed time for subprocess: 00:00:00.024
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:43
+=============================================================
+processing took: 
+Elapsed time for subprocess: 00:00:01.661
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:44
+=============================================================
+glanceprocessing took: 
+Elapsed time for subprocess: 00:00:00.210
+
+processing took: 
+Elapsed time for subprocess: 00:00:00.201
+
+processing took: 
+Elapsed time for subprocess: 00:00:01.686
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:45
+=============================================================
+glance processing took: 
+Elapsed time for subprocess: 00:00:00.214
+
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.202
+
+processing took: 
+Elapsed time for subprocess: 00:00:01.651
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:45
+=============================================================
+glance processing took: 
+Elapsed time for subprocess: 00:00:02.012
+
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.216
+
+processing took: 
+Elapsed time for subprocess: 00:00:01.654
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:46
+=============================================================
+glance processing took: 
+Elapsed time for subprocess: 00:00:02.093
+
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.200
+
+processing took: 
+Elapsed time for subprocess: 00:00:01.652
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:47
+=============================================================
+glance processing took: 
+Elapsed time for subprocess: 00:00:02.256
+
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.208
+
+processing took: 
+Elapsed time for subprocess: 00:00:01.668
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:47
+=============================================================
+glance processing took: 
+Elapsed time for subprocess: 00:00:02.259
+
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.203
+
+processing took: 
+Elapsed time for subprocess: 00:00:01.643
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:51
+=============================================================
+glance processing took: 
+Elapsed time for subprocess: 00:00:02.235
+
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.228
+
+processing took: 
+Elapsed time for subprocess: 00:00:01.608
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 07:51
+=============================================================
+glance processing took: 
+Elapsed time for subprocess: 00:00:02.175
+
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.221
+
+processing took: 
+Elapsed time for subprocess: 00:00:01.609
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 08:17
+=============================================================
+glance processing took: 
+Elapsed time for subprocess: 00:00:01.749
+
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.182
+
+build complete class processing took: 
+Elapsed time for subprocess: 00:00:01.322
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 08:53
+=============================================================
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.187
+
+build complete class processing took: 
+Elapsed time for subprocess: 00:00:01.294
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 09:06
+=============================================================
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.245
+
+build complete class processing took: 
+Elapsed time for subprocess: 00:00:01.465
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 09:06
+=============================================================
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.260
+
+build complete class processing took: 
+Elapsed time for subprocess: 00:00:01.504
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 09:07
+=============================================================
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.175
+
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.262
+
+build complete class processing took: 
+Elapsed time for subprocess: 00:00:01.527
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 09:08
+=============================================================
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.181
+
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.255
+
+build complete class processing took: 
+Elapsed time for subprocess: 00:00:01.523
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 09:38
+=============================================================
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.327
+
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.319
+
+build complete class processing took: 
+Elapsed time for subprocess: 00:00:01.271
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 09:38
+=============================================================
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.329
+
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.323
+
+build complete class processing took: 
+Elapsed time for subprocess: 00:00:01.289
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 09:39
+=============================================================
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.323
+
+build complete class processing took: 
+Elapsed time for subprocess: 00:00:01.287
+
+=============================================================
+Message Parser program started the 27 of Jul 2017 at 09:40
+=============================================================
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.345
+
+build complete class processing took: 
+Elapsed time for subprocess: 00:00:01.267
+
+=============================================================
+Message Parser program started the 31 of Jul 2017 at 16:43
+=============================================================
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.392
+
+build complete class processing took: 
+Elapsed time for subprocess: 00:00:01.571
+
+=============================================================
+Message Parser program started the 31 of Jul 2017 at 16:44
+=============================================================
+store query, processing took: 
+Elapsed time for subprocess: 00:00:00.396
+
+build complete class processing took: 
+Elapsed time for subprocess: 00:00:01.560
+
