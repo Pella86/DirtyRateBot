@@ -264,7 +264,7 @@ class UserProfile:
             keyboard = InlineKeyboardMarkup(inline_keyboard=[[button,],])
 
             try:
-                bot.sendMessage(self.getChatID(chatsdb), notification_message, reply_markup= keyboard)
+                bot.sendMessage(self.getChatID(chatsdb), notification_message, parse_mode = "HTML", reply_markup= keyboard)
             except TelegramError as tge:
                 print("Send notif:", tge.description)
                 self.isActive = False

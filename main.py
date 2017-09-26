@@ -20,8 +20,8 @@ import time
 import pickle
 import datetime
 import urllib3
+import datetime
 import random
-
 
 # my imports
 from LogTimes import Logger
@@ -33,6 +33,7 @@ from Category import Category
 from SuperGroup import SuperGroup
 from ContentVote import ContentVote
 from CategoriesManager import Categories
+from Announcement import Announcement
 from LanguageSupport import _
 
 import emoji_table as em
@@ -43,25 +44,55 @@ import CategoryTags as tags
 import telepot
 from telepot.loop import MessageLoop
 from telepot.namedtuple import (InlineQueryResultArticle, InputTextMessageContent,
-                                ForceReply)
+                                ForceReply,InlineKeyboardMarkup,
+                                InlineKeyboardButton)
 from telepot.exception import TelegramError
 
-#%% initialization telegram ports
-#proxy_url = "http://proxy.server:3128"
-#telepot.api._pools = {
-#    'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
-#}
-#telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=30))
 
+
+#%% initialization telegram ports
+''' Python anywhere free package doesn't allow a direct connection, so a proxy
+connection is needed, in order to have one file serve it all
+i inserted a conditional operation to ensure the bot is started from the
+python anywhere server
+'''
+
+# read the config file
+with open("./botdata/Config.txt", "r") as f:
+    lines = f.readlines()
+
+# parse the arguments
+commands = {} 
+for line in lines:
+    s = line.split("=")
+    s = list(map(str.strip, s))
+    
+    print(s)
+    
+    commands[s[0]] = s[1]
+
+# verify is on server
+isOnServer = True if commands["isOnServer"] == "True" else False
+
+if isOnServer:
+    proxy_url = "http://proxy.server:3128"
+    telepot.api._pools = {
+        'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
+    }
+    telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=30))
 
 #%% constants
+
 # creator constants
 creator_id = 183961724
 creator_chatid = 183961724
 
 # bot constants
-class BotDataReader:
+''' The bot has a test bot which has a different token from the original bot
+the token is saved in the bot_data and read when is being tested
+'''
 
+class BotDataReader:
 
     def __init__(self):
         self.botfile = "./botdata/bot_data.tbot"
@@ -92,11 +123,11 @@ rem_categories_request_msg = "Pick categories to remove from the group, comma se
 
 #%% TO DO
 
-# create announcment class
+# possibility to delete pictures
 
-# restructure upload
-# Introduce anonymous vs. not anonymous post
-#   restructure the menu so that
+# reorganize language support
+
+# create statistics
 
 # create anti spam
 
@@ -125,7 +156,6 @@ def calc_rep_cost(user, rpq):
         tmp_rep = karma * tmp_rp
         total_cost += cost
 
-
     print("rp quantity:", rpq, "points cost:",total_cost)
     return int(total_cost)
 
@@ -147,7 +177,6 @@ def handle(msg):
         chatid = mymsg.chat.id
         userid = mymsg.mfrom.id
 
-
         # create a instance of supergroup
         if chatid in supergroupsdb.database:
             dspg = supergroupsdb.getData(chatid)
@@ -157,7 +186,6 @@ def handle(msg):
             spg = SuperGroup(chatid)
             spg.initCategories(categories.categories_db)
             dspg = Data(spg.id, spg)
-
 
             bot.sendMessage(chatid, "Hello, I'm a bot to share and rate pictures, use the command /vote, admins of this chat can /set_categories which will be shown, for more information talk to me in private.")
 
@@ -185,17 +213,14 @@ def handle(msg):
                     supergroupsdb.setData(dspg)
                     supergroupsdb.updateDb()
 
-
                 elif mymsg.content.text == "/rem_all":
                     lg.log("------------ NEW MESSAGE ------------")
                     lg.log("removed all categories for group " + str(spg.id))
-
 
                     spg.remAll()
                     dspg = Data(spg.id, spg)
                     supergroupsdb.setData(dspg)
                     supergroupsdb.updateDb()
-
 
                     bot.sendMessage(chatid, "All the categories removed, bot will be silent.")
 
@@ -208,10 +233,9 @@ def handle(msg):
                        )
                    ):
 
-
                     usermsg = mymsg.content.text
 
-                   catnames = usermsg.strip().split(",")
+                    catnames = usermsg.strip().split(",")
                     catnames = map(str.strip, catnames)
                     cs = []
                     if mymsg.reply.content.text == add_categories_request_msg:
@@ -224,7 +248,6 @@ def handle(msg):
                         if cs:
                             catstr = "".join([catname+" | " for catname in cs])[:-3]
                             valmsg = "The bot will NOT show media from: " + catstr
-
 
                     if not cs:
                         valmsg = "No valid category detected"
@@ -263,7 +286,6 @@ def handle(msg):
                     lg.log("called set kinky in group" + str(spg.id))
                     spg.setKinky()
 
-
                     bot.sendMessage(chatid, "The bot will show NSFW content from the categories boobs, booty, bdsm, hentai, lesbian.")
 
                     dspg = Data(spg.id, spg)
@@ -276,7 +298,6 @@ def handle(msg):
                     spg.setAll()
                     bot.sendMessage(chatid, "The bot will show NSFW content from the all the categories.")
 
-
                     dspg = Data(spg.id, spg)
                     supergroupsdb.setData(dspg)
                     supergroupsdb.updateDb()
@@ -286,7 +307,6 @@ def handle(msg):
                     lg.log("called reset category in group" + str(spg.id))
                     spg.initCategories(categories.categories_db)
                     bot.sendMessage(chatid, "The bot will show content (SFW) from categories nature space and meme.")
-
 
                     dspg = Data(spg.id, spg)
                     supergroupsdb.setData(dspg)
@@ -304,6 +324,7 @@ def handle(msg):
     if mymsg.chat.type == "private":
         lg.log("------------ NEW MESSAGE ------------")
         mymsg.initOptionals()
+
         # is the person in the userprofiledb?
         if categories.user_profile_db.isNew(mymsg.mfrom):
             lg.log("New profile created")
@@ -399,6 +420,7 @@ def handle(msg):
                         categories.sendMainMenu(mymsg.chat.id, user)
 
                 elif mymsg.content.text.startswith("/help"):
+
                     #split the content
 
                     command = mymsg.content.text.split('_')
@@ -425,6 +447,7 @@ def handle(msg):
                             lg.log("requested help points")
                             help_msg = Helpmsg.help_msg_points(user.lang_tag)
                             bot.sendMessage(mymsg.chat.id, help_msg, parse_mode = "HTML")
+
                         elif helpcat == "reputation":
                             lg.log("requested help reputation")
                             #send help reputation message
@@ -547,8 +570,6 @@ def handle(msg):
                     lg.log("requested top")
                     categories.sendUserTop(mymsg.chat.id, ['reputation', 'karma'], user)
 
-
-
                 elif mymsg.content.text.startswith("/vote"):
 
                     if mymsg.content.text.startswith("/vote_"):
@@ -565,7 +586,6 @@ def handle(msg):
                             cat = dcat.getData()
                             if cat.getMediaList(categories.media_vote_db):
                                 catnameslist.append(cat.name)
-
 
                         print(catnameslist)
 
@@ -605,12 +625,14 @@ def handle(msg):
                 elif mymsg.content.text.startswith("/main_menu"):
                     lg.log("requested main menu")
                     categories.sendMainMenu(mymsg.chat.id, user)
+
                 elif mymsg.content.text.startswith("/buy_reputation"):
                     print("requested buy reputation")
                     param = mymsg.content.text.split("_")[2:]
                     print(param)
                     if len(param) == 0:
                         user.sendBuyReputation(mymsg.chat.id, bot)
+
                 elif mymsg.content.text == "/print_user_list"  and user.id == creator_id:
                     categories.printUserList()
                 else:
@@ -650,6 +672,7 @@ def handle(msg):
 
 
 
+
 #==============================================================================
 # # handle function: Manage received messages
 #==============================================================================
@@ -659,6 +682,7 @@ def query(msg):
 
     lg.log("------------ NEW QUERY ------------")
     lg.startTimer()
+
 
     query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
     print('Callback Query:', query_id, from_id, query_data)
@@ -738,6 +762,7 @@ def query(msg):
 
                         # update the media
                         media.downvote += 1
+
                         post_media_score = media.getScore()
 
                         #update the category score
@@ -778,6 +803,7 @@ def query(msg):
                                     bot.sendMessage(user.getChatID(chatsdb), "You voted a media you earned 1" + em.points_emoji)
                                     send_user_found = True
                                     break
+
                     media.votersids.append(person.id)
 
                     dmedia.setData(media)
@@ -866,6 +892,7 @@ def query(msg):
         bot.answerCallbackQuery(query_id, text="deleted")
         param = query_data.split("_")
         uid = param[1]
+
         if uid == "cat":
             catname = param[2]
             category = categories.categories_db.getData(catname).getData()
@@ -989,6 +1016,7 @@ def query(msg):
                     bot.answerCallbackQuery(query_id, text ="Reached last page")
             else:
                 raise e
+
     elif query_data.startswith("buy_"):
         param = query_data.split("_", maxsplit = 1)[1:]
         if len(param) == 0:
@@ -1030,6 +1058,7 @@ def query(msg):
                             user.points -= total_cost
                             user.dayuploads = 0
                             user.firstuploadtime = datetime.datetime.now()
+
                             # update user db
                             duser = Data(user.id, user)
                             categories.user_profile_db.setData(duser)
@@ -1039,7 +1068,37 @@ def query(msg):
                             # with the new prices
                             bot.sendMessage(user.getChatID(chatsdb), text = "You have now 5 more uploads")
                             bot.answerCallbackQuery(query_id, text = "Bough uploads, great deal!")
+            elif param[0] == "delete":
+                param = param[1]
+                is_int = False
+                try:
+                    points = int(param)
+                    is_int = True
 
+                except ValueError:
+                    print("param is not int", param)
+
+                except Exception as e:
+                    print("Pella: Unknown error")
+                    print(e)
+                    raise e  
+                
+                if is_int:
+
+                    if points > user.points:
+                        bot.sendMessage(user.getChatID(chatsdb), text = not_enoug_money_msg)
+                        bot.answerCallbackQuery(query_id, text = "Not enough money")
+                    else:
+                        user.points -= points
+                        duser = Data(user.id, user)
+                        categories.user_profile_db.setData(duser)
+                        categories.user_profile_db.updateDb()
+                        
+                        bot.answerCallbackQuery(query_id, text = "Picture deleted from database")
+                        
+                        
+                        
+                        # delete the message?
 
             elif param[0] == "rp":
                 param = param[1]
@@ -1055,6 +1114,7 @@ def query(msg):
                     try:
                         rp = int(param[0])
                         is_int = True
+
                     except ValueError:
                         print("param is not int", param)
                     except Exception as e:
@@ -1072,10 +1132,12 @@ def query(msg):
                             # update the user status
                             user.points -= total_cost
                             user.rep_points += rp
+
                             # update user db
                             duser = Data(user.id, user)
                             categories.user_profile_db.setData(duser)
                             categories.user_profile_db.updateDb()
+
                             # send relative messages and callbacks / edit the previous message
                             # with the new prices
                             bot.sendMessage(user.getChatID(chatsdb), text = "You bought " + str(em.RPstr(rp)) + "\nYou now have a reputation of " + str(user.getReputationStr()))
@@ -1128,6 +1190,7 @@ def query(msg):
     else:
         bot.answerCallbackQuery(query_id, text='what?')
         print("not my query")
+
     lg.log("- Operation done -", time_sub = True)
 
 #%%Test message
@@ -1224,12 +1287,14 @@ class TestMessage:
 
 
 
+
 #    # update categories media db
 #    print("updating rep db")
 #    for data in categories.user_profile_db.values():
 #        user = data.getData()
 #
 #        user.rep_points = 1
+#
 #        data.setData(user)
 #
 #    categories.user_profile_db.updateDb()
@@ -1242,9 +1307,11 @@ class TestMessage:
 #        user = data.getData()
 #
 #        user.anonid = user.anonid.upper()
+#
 #        data.setData(user)
 #
 #    categories.user_profile_db.updateDb()
+
 
 #%% Inline query functions
 
@@ -1262,6 +1329,7 @@ def on_inline_query(msg):
                    )]
 
         return articles
+
     answerer.answer(msg, compute)
 
 def on_chosen_inline_result(msg):
@@ -1290,10 +1358,10 @@ if __name__ == "__main__":
     contentsdb = Database("./data/contents_db/")
     print("Loading contents db")
     contentsdb.loadDb()
+
     supergroupsdb = Database("./data/supergroups_db/")
     print("Loading supergroups db")
     supergroupsdb.loadDb()
-
 
 
 
@@ -1304,13 +1372,18 @@ if __name__ == "__main__":
 
 
     lg.log("- Databases Loaded -", True)
-
+    
     MessageLoop(bot, {'chat': handle,
                      'callback_query': query,
                      'chosen_inline_result': on_chosen_inline_result
 
                      }
                 ).run_as_thread()
+
+    announce = Announcement(bot, categories, chatsdb)
+    announce.announce_all_users("Hello this is a test message, I'm testing a new function of the bot, turn down notifications, you'll get a load of messages.")
+    
+    announce.run_daily()
 
     print ('Listening ...')
 

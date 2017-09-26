@@ -177,7 +177,7 @@ class ContentVote:
         
         return keyboard
     
-    def makeKeyboardVote(self):
+    def makeKeyboardVote(self, deleteprice = 0):
         upvstr = 'like '+ em.upvote_emoji +' - ' + str(self.upvote)
         cbstr = 'v_like_' + str(self.uid)
         button_upvote = InlineKeyboardButton(text=upvstr, callback_data=cbstr)
@@ -196,15 +196,26 @@ class ContentVote:
         
         reportstr = 'report category ' + em.report_emoji
         cbstr = 'report_cat_' + str(self.catname)
-        button_report_cat = InlineKeyboardButton(text=reportstr, callback_data=cbstr)        
+        button_report_cat = InlineKeyboardButton(text=reportstr, callback_data=cbstr) 
+        
+        if deleteprice != 0:
+            price = em.Pstr(deleteprice)
+            deletestr = 'delete {}'.format(price)
+            cbstr = 'buy_delete_' + str(deleteprice)
+            button_delete_pic = InlineKeyboardButton(text=deletestr, callback_data=cbstr) 
 
         ld_row = [button_upvote, button_downvote]
         report_row = [button_hide, button_report]
         reportcat_row = [button_report_cat]
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[ld_row, report_row, reportcat_row])
+        if deleteprice != 0:
+            deletepic_row = [button_delete_pic]
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[ld_row, report_row, reportcat_row, deletepic_row])
+        else:
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[ld_row, report_row, reportcat_row])
+            
         return keyboard
 
-    def makeKeyboardShow(self):
+    def makeKeyboardShow(self, deleteprice = 0):
         hidestr = 'Hide media '+ em.hidemedia_emoji
         cbstr = 'noshow_' + str(self.uid)
         button_hide = InlineKeyboardButton(text=hidestr, callback_data=cbstr)
@@ -217,9 +228,22 @@ class ContentVote:
         cbstr = 'report_cat_' + str(self.catname)
         button_report_cat = InlineKeyboardButton(text=reportstr, callback_data=cbstr)        
 
+
+        if deleteprice != 0:
+            price = em.Pstr(deleteprice)
+            deletestr = 'delete {}'.format(price)
+            cbstr = 'buy_delete_' + str(deleteprice)
+            button_delete_pic = InlineKeyboardButton(text=deletestr, callback_data=cbstr)  
+
         report_row = [button_hide, button_report]
         reportcat_row = [button_report_cat]
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[report_row, reportcat_row])
+        
+        if deleteprice != 0:
+            deletepic_row = [button_delete_pic]
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[report_row, reportcat_row, deletepic_row])       
+        else:
+            keyboard = InlineKeyboardMarkup(inline_keyboard=[report_row, reportcat_row])       
+        
         return keyboard
 
 #    def addCreationMessage(self, msg):
@@ -255,7 +279,14 @@ class ContentVote:
         cpt += "/vote_" + self.catname + " or /main_menu"
         
         # keyboard
-        rmk = self.makeKeyboardVote()
+        
+        user = self.getUser(catManager.user_profile_db)
+        delete_price = 0
+        if self.userid == user.id:
+            delete_price = 100 + abs(self.getReputation())
+            
+        
+        rmk = self.makeKeyboardVote(delete_price)
         
         # file
         self.sendMedia(chatid, cpt, rmk, catManager.bot)
@@ -305,11 +336,12 @@ class ContentVote:
         # show /vote else display /show
         
         votedall = False
+        user = None
         
         if chatdb is not None:
             chat = chatdb.getData(chatid).getData()
             if chat.type == "private":
-                user = catManager.user_profile_db.getData(chat.person.id).getData()
+                user = self.getUser(catManager.user_profile_db)
                 (mediavoted, totmedia) = user.getMediaVoted(self.catname, catManager)
                 if mediavoted == totmedia:
                     votedall = True
@@ -323,7 +355,10 @@ class ContentVote:
             cpt += afterinfo + "\n"
         
         # Keyboard
-        rmk = self.makeKeyboardShow()
+        delete_price = 0
+        if user is not None and user.id == self.userid:
+            delete_price = 100 + self.getReputation()
+        rmk = self.makeKeyboardShow(delete_price)
         
         # File
         self.sendMedia(chatid, cpt, rmk, catManager.bot)
