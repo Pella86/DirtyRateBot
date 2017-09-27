@@ -73,7 +73,6 @@ class CbkQuery:
         
 
         self.query_msg = query_msg
-        self.init_sub = False
         self.init_opt = False
         if opt:
             self.initOptionals()
@@ -87,8 +86,6 @@ class CbkQuery:
         self.game_short_name = self.query_msg.get('game_short_name')
         self.init_opt = True
     
-    def initSub(self):
-        self.person = self.person.initOptionals()
     
     def __str__(self):
         

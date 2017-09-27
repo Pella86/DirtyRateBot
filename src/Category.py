@@ -136,4 +136,3 @@ class Category:
             
             catManager.bot.sendMessage(chatid, "Category creator: " + str(creator), reply_markup = rmkban )
         
-    

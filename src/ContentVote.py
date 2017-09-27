@@ -201,7 +201,7 @@ class ContentVote:
         if deleteprice != 0:
             price = em.Pstr(deleteprice)
             deletestr = 'delete {}'.format(price)
-            cbstr = 'buy_delete_' + str(deleteprice)
+            cbstr = 'buy_delete_' + str(deleteprice) + "_" + str(self.uid)
             button_delete_pic = InlineKeyboardButton(text=deletestr, callback_data=cbstr) 
 
         ld_row = [button_upvote, button_downvote]
@@ -232,7 +232,7 @@ class ContentVote:
         if deleteprice != 0:
             price = em.Pstr(deleteprice)
             deletestr = 'delete {}'.format(price)
-            cbstr = 'buy_delete_' + str(deleteprice)
+            cbstr = 'buy_delete_' + str(deleteprice) + "_" + str(self.uid)
             button_delete_pic = InlineKeyboardButton(text=deletestr, callback_data=cbstr)  
 
         report_row = [button_hide, button_report]
@@ -269,7 +269,7 @@ class ContentVote:
             bot.sendDocument(chatid, file_id, caption = cpt, reply_markup = rmk)   
 
 
-    def showMediaVote(self, chatid, catManager):
+    def showMediaVote(self, chatid, catManager, chatsdb):
         # shows the media wit voting options
         
         cpt = ""
@@ -279,13 +279,17 @@ class ContentVote:
         cpt += "/vote_" + self.catname + " or /main_menu"
         
         # keyboard
+        chattinguser = None
+        for tmp_duser in catManager.user_profile_db.values():
+            tmp_user = tmp_duser.getData()
+            if tmp_user.getChatID(chatsdb) == chatid:
+                chattinguser = tmp_user
+                break        
         
-        user = self.getUser(catManager.user_profile_db)
         delete_price = 0
-        if self.userid == user.id:
+        if self.userid == chattinguser.id:
             delete_price = 100 + abs(self.getReputation())
-            
-        
+
         rmk = self.makeKeyboardVote(delete_price)
         
         # file
@@ -336,13 +340,20 @@ class ContentVote:
         # show /vote else display /show
         
         votedall = False
-        user = None
+        chattinguser = None
         
         if chatdb is not None:
+            # find the user requesting the show vote
             chat = chatdb.getData(chatid).getData()
             if chat.type == "private":
-                user = self.getUser(catManager.user_profile_db)
-                (mediavoted, totmedia) = user.getMediaVoted(self.catname, catManager)
+            
+                for tmp_duser in catManager.user_profile_db.values():
+                    tmp_user = tmp_duser.getData()
+                    if tmp_user.getChatID(chatdb) == chatid:
+                        chattinguser = tmp_user
+                        break
+
+                (mediavoted, totmedia) = chattinguser.getMediaVoted(self.catname, catManager)
                 if mediavoted == totmedia:
                     votedall = True
         
@@ -356,7 +367,10 @@ class ContentVote:
         
         # Keyboard
         delete_price = 0
-        if user is not None and user.id == self.userid:
+        
+        print("user id, media userid:", chattinguser.id if chattinguser else None, self.userid)
+        
+        if chattinguser is not None and chattinguser.id == self.userid:
             delete_price = 100 + self.getReputation()
         rmk = self.makeKeyboardShow(delete_price)
         

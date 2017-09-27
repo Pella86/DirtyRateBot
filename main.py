@@ -123,7 +123,9 @@ rem_categories_request_msg = "Pick categories to remove from the group, comma se
 
 #%% TO DO
 
-# possibility to delete pictures
+# 1/2 the price for a category
+
+# rename rep points in shield points and points in coins
 
 # reorganize language support
 
@@ -491,9 +493,9 @@ def handle(msg):
                                 pass
                             except Exception as e:
                                 print(e)
-                        categories.sendUserUploads(mymsg.chat.id, user, nmax)
+                        categories.sendUserUploads(mymsg.chat.id, user, chatsdb, nmax)
                     else:
-                        categories.sendUserUploads(mymsg.chat.id, user, nmax)
+                        categories.sendUserUploads(mymsg.chat.id, user, chatsdb, nmax)
 
                 elif mymsg.content.text == "/profile":
                     lg.log("requested profile")
@@ -529,7 +531,7 @@ def handle(msg):
 
                     lg.log("{0} {1}".format(categoryname, nmax))
                     if categoryname:
-                        categories.sendShowTop(mymsg.chat.id, categoryname, nmax)
+                        categories.sendShowTop(mymsg.chat.id, categoryname, chatsdb, nmax)
                     else:
                         bot.sendMessage(mymsg.chat.id, "Usage: show_top [category] [number of pictures]\n/main_menu")
 
@@ -562,7 +564,7 @@ def handle(msg):
                                     media = dmedia.getData()
                                     if media.uid == uid:
                                         lg.log(str(media))
-                                        media.showMediaShow(mymsg.chat.id, categories)
+                                        media.showMediaShow(mymsg.chat.id, categories, chatdb=chatsdb)
                                         break
 
 
@@ -575,7 +577,7 @@ def handle(msg):
                     if mymsg.content.text.startswith("/vote_"):
                         categoryname = "".join(mymsg.content.text.split("_")[1:])
                         lg.log("requested vote for: " + categoryname)
-                        categories.voteCategoryPrivate(mymsg.chat.id, user, categoryname)
+                        categories.voteCategoryPrivate(mymsg.chat.id, user, categoryname, chatsdb)
                     else:
                         # pick a random category name
                         categorylist = categories.categories_db.values()
@@ -616,7 +618,7 @@ def handle(msg):
                                     break
 
                             lg.log("requested vote for: " + catname)
-                            categories.voteCategoryPrivate(mymsg.chat.id, user, catname)
+                            categories.voteCategoryPrivate(mymsg.chat.id, user, catname, chatsdb)
                         else:
                             bot.sendMessage(mymsg.chat.id, "All categories have no media")
                             lg.log("All categories have no media")
@@ -816,7 +818,7 @@ def query(msg):
                         bot.editMessageReplyMarkup(cbquery.getChatMsgID(), keyboard)
 
                     if send_user_found:
-                        categories.voteCategoryPrivate(user.getChatID(chatsdb), user, media.catname)
+                        categories.voteCategoryPrivate(user.getChatID(chatsdb), user, media.catname, chatsdb)
 
                 else:
                     bot.answerCallbackQuery(query_id, text='Already voted')
@@ -1018,23 +1020,27 @@ def query(msg):
                 raise e
 
     elif query_data.startswith("buy_"):
-        param = query_data.split("_", maxsplit = 1)[1:]
-        if len(param) == 0:
-            print("Bad Format")
-            print(query_data)
-        else:
+        # the buy call back has to do with anything that costs money        
+        # split the buy callback data by underscore       
+        param = query_data.split("_")
+        
+        # check if there's more than one element, meaning that the list of
+        # parameters contains [buy, identifier, cost, ...]
+        if len(param) > 1:
+            # initialize the call back elements (user and the call back structure)
             cb_query = CbkQuery(msg)
             user = categories.user_profile_db.getData(from_id).getData()
-            param = param[0].split("_", maxsplit = 1)
-            print(param)
-            if param[0] == "calcp":
+            
+            # get the identifier (calcp, uploads, delete, rp)
+            identifier = param[1] 
+            
+            if identifier == "calcp":
                 print("calculate the probability")
-                categories.sendProbability(user.getChatID(chatsdb), user, categories.user_profile_db)
-            elif param[0] == "uploads":
-                param = param[1]
-                is_int = False
+                categories.sendProbability(user.getChatID(chatsdb), user, categories.user_profile_db)            
+            else:
+                # transform the third parameter in int
                 try:
-                    points = int(param)
+                    cost = int(param[2])
                     is_int = True
 
                 except ValueError:
@@ -1046,16 +1052,18 @@ def query(msg):
                     raise e
 
                 if is_int:
-                    total_cost = points
-
-                    if total_cost > user.points:
+                    # in case of rp identifier are passed the reputation points
+                    # wanted, not the cost in points
+                    if identifier == "rp":
+                        rp = cost
+                        cost = calc_rep_cost(user, rp)
+                    
+                    if cost > user.points:
                         bot.sendMessage(user.getChatID(chatsdb), text = not_enoug_money_msg)
                         bot.answerCallbackQuery(query_id, text = "Not enough money")
                     else:
-
-                        # update the user status
-                        if user.dayuploads >= MAXUPLOADS:
-                            user.points -= total_cost
+                        if identifier == "uploads" and user.dayuploads >= MAXUPLOADS:
+                            user.points -= cost
                             user.dayuploads = 0
                             user.firstuploadtime = datetime.datetime.now()
 
@@ -1067,70 +1075,52 @@ def query(msg):
                             # send relative messages and callbacks / edit the previous message
                             # with the new prices
                             bot.sendMessage(user.getChatID(chatsdb), text = "You have now 5 more uploads")
-                            bot.answerCallbackQuery(query_id, text = "Bough uploads, great deal!")
-            elif param[0] == "delete":
-                param = param[1]
-                is_int = False
-                try:
-                    points = int(param)
-                    is_int = True
+                            bot.answerCallbackQuery(query_id, text = "Bough uploads, great deal!")                            
+                        elif identifier == "delete":
+                            
+                            # delete media
+                            mediauid = None
+                            media = None
+                            
+                            try:
+                                mediauid = int(param[3])
+                            except ValueError:
+                                print("param[3]:uid is not int", param)
+                            except Exception as e:
+                                print(e)
+                                print("buy_delete_: Unknown Error")
+                                raise e
+                            
+                            # find the media
+                            if mediauid is not None:
+                                for dmedia in categories.media_vote_db.values():
+                                    tmp_media = dmedia.getData()
+                                    if tmp_media.uid == mediauid:
+                                        media = tmp_media
+                                        break
+                                
+                            if mediauid is not None and media is not None:
+                                # update media status
+                                media.deleted = True
+                                categories.media_vote_db.setData(Data(media.id, media))
+                                categories.media_vote_db.updateDb()
 
-                except ValueError:
-                    print("param is not int", param)
+                                # update user points
+                                user.points -= cost
+                                duser = Data(user.id, user)
+                                categories.user_profile_db.setData(duser)
+                                categories.user_profile_db.updateDb()
+                                
+                                # for scenic effect delete the media
+                                bot.deleteMessage(cb_query.getChatMsgID())
+                                bot.answerCallbackQuery(query_id, text = "Picture deleted from database")                            
+                                    
+                        elif identifier == "rp":
 
-                except Exception as e:
-                    print("Pella: Unknown error")
-                    print(e)
-                    raise e  
-                
-                if is_int:
-
-                    if points > user.points:
-                        bot.sendMessage(user.getChatID(chatsdb), text = not_enoug_money_msg)
-                        bot.answerCallbackQuery(query_id, text = "Not enough money")
-                    else:
-                        user.points -= points
-                        duser = Data(user.id, user)
-                        categories.user_profile_db.setData(duser)
-                        categories.user_profile_db.updateDb()
-                        
-                        bot.answerCallbackQuery(query_id, text = "Picture deleted from database")
-                        
-                        
-                        
-                        # delete the message?
-
-            elif param[0] == "rp":
-                param = param[1]
-                cb_query = CbkQuery(msg)
-                user = categories.user_profile_db.getData(from_id).getData()
-                if from_id in categories.user_profile_db.database:
-
-                    print("points: ", user.points)
-                    print("rep points:", user.rep_points)
-
-
-                    is_int = False
-                    try:
-                        rp = int(param[0])
-                        is_int = True
-
-                    except ValueError:
-                        print("param is not int", param)
-                    except Exception as e:
-                        print("Unknown error")
-                        print(e)
-                        raise e
-
-                    if is_int:
-                        total_cost = calc_rep_cost(user, rp)
-
-                        if total_cost > user.points:
-                            bot.sendMessage(user.getChatID(chatsdb), text = not_enoug_money_msg)
-                            bot.answerCallbackQuery(query_id, text = "Not enough money")
-                        else:
+                            print("user points: ", user.points)
+                            print("rep points:", user.rep_points)
                             # update the user status
-                            user.points -= total_cost
+                            user.points -= cost
                             user.rep_points += rp
 
                             # update user db
@@ -1142,8 +1132,9 @@ def query(msg):
                             # with the new prices
                             bot.sendMessage(user.getChatID(chatsdb), text = "You bought " + str(em.RPstr(rp)) + "\nYou now have a reputation of " + str(user.getReputationStr()))
                             user.sendBuyReputation(cb_query.getChatMsgID(), bot, edit=True)
-                            bot.answerCallbackQuery(query_id, text = "Bough reputation, great deal!")
-
+                            bot.answerCallbackQuery(query_id, text = "Bough reputation, great deal!")                            
+                    
+            
     elif query_data.startswith("createcat_"):
         # split the query data
         catd = query_data.split("_")

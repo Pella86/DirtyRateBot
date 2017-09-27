@@ -108,8 +108,10 @@ class Categories:
         m = _(m, user.lang_tag)
 
         self.bot.sendMessage(chatid, m, parse_mode = "HTML")
-
-
+    
+    def categoryPrice(self, user):
+        return (1000 + int(user.getReputation() / 1000))
+                
     def addCategory(self, chatid, user):
         # chatid must be private, checked in the handle
         self.sendSelectCategoryMenu(chatid, sort=True)
@@ -119,10 +121,11 @@ class Categories:
         sdb["points"] = user.getPointsStr(True)
 
         m = "Send a category name\n"
-        m += "<i>The name must be maximum 15 characters long and can contain only alphanumeric characters (a-b and 1-10)</i>\n"
+        m += "<i>The name must be maximum 15 characters long and can contain only alphanumeric characters (a-z and A-Z and 1-10)</i>\n"
 
         m += "\n"
         m += "Create a category will cost {price} you have {points}\n"
+        m += "/cancel\n"
 
         m = _(m, user.lang_tag)
 
@@ -142,19 +145,24 @@ class Categories:
 
                 # check validity of category name
                 # a category must be max 15 character long
-                categoryname = msg.content.text.lower()
+                categoryname = msg.content.text
 
                 is_valid_name = True
                 if len(categoryname) > 15:
                     is_valid_name = False
 
-                validcharset = string.ascii_lowercase + string.digits
+                validcharset = string.ascii_lowercase + string.ascii_uppercase + string.digits
 
                 if is_valid_name:
                     for c in categoryname:
                         if c not in validcharset:
                             is_valid_name = False
                             break
+                        
+                if is_valid_name:
+                    if categoryname in map(list(self.categories_db.keys()), str.lower()):
+                        is_valid_name = False
+                
                 # if the name is valid
                 # create a message where the buttons displays the possible tags
                 if is_valid_name:
@@ -196,7 +204,7 @@ class Categories:
 
 
                 else:
-                    self.bot.sendMessage(chatid,_("Name not valid /add_category again", user.lang_tag))
+                    self.bot.sendMessage(chatid,_("Name not valid (either character or category already present) /add_category again", user.lang_tag))
                     self.new_cat_req[chatid] = (False, False)
             else:
                 self.bot.sendMessage(chatid, _("Operation aborted (must be text and not a command) /add_category again", user.lang_tag))
@@ -278,7 +286,7 @@ class Categories:
         for dcat in self.categories_db.values():
             cat = dcat.getData()
             if not cat.deleted:
-                catnamelist.append(cat.name)
+                catnamelist.append(cat.name.lower())
         return catnamelist
 
     def sendSelectCategoryMenu(self, chatid, ipage = None, sort = False, menu = False, topmedia=False, user = None):
@@ -370,6 +378,16 @@ class Categories:
             self.getuploadCategory[chatid] = True
 
     def getUploadCategory(self, msg):
+        ''' This function is the core function of the uploading process
+        the function checks if the media can be created, the function is activated only
+        if the user requested an upload (either by direct posting or command /upload)
+        and the user provided a category name
+        
+        categoryname: must be the lowercase representation of one of the category
+        
+        if the user chosed a valid category
+        the program will try to create a media
+        '''
         chatid = msg.chat.id
 
         if self.getuploadCategory[chatid] == True and self.getuploadMedia[chatid] == "success":
@@ -384,8 +402,6 @@ class Categories:
                 catnamelist = self.getCategoriesNamesList()
                 if usercatname in catnamelist:
                     # get the user
-
-
                     user.tmp_content["cateogry"] = usercatname
                     # preventively
                     # change this might create error
@@ -591,7 +607,7 @@ class Categories:
 
         return m
 
-    def voteCategoryPrivate(self, chatid, user, categoryname):
+    def voteCategoryPrivate(self, chatid, user, categoryname, chatsdb):
         medialist = []
         for dmedia in self.media_vote_db.values():
             media = dmedia.getData()
@@ -619,7 +635,7 @@ class Categories:
                 print("The user will vote: ", chosen_media)
 
                 # propose picture
-                chosen_media.showMediaVote(chatid, self)
+                chosen_media.showMediaVote(chatid, self, chatsdb)
             else:
                 self.bot.sendMessage(chatid, _("You voted all the pictures in this category use", user.lang_tag))
                 self.sendMainMenu(chatid, user)
@@ -674,7 +690,7 @@ class Categories:
             mediasorted = mediasorted[:nmax]
         return mediasorted
 
-    def sendShowTop(self, chatid, categoryname, nmax = None):
+    def sendShowTop(self, chatid, categoryname, chatsdb, nmax = None):
         # first
         catnamelist = self.getCategoriesNamesList()
         if categoryname in catnamelist:
@@ -690,15 +706,15 @@ class Categories:
                     beforeinfo = em.second_medal + " Second " + em.second_medal
                 if i == 2:
                     beforeinfo = em.third_medal + " Third " + em.third_medal
-                media.showMediaShow(chatid, self, beforeinfo)
+                media.showMediaShow(chatid, self, beforeinfo, chatdb=chatsdb)
         else:
             self.bot.sendMessage(chatid, "ShowTop: Category not found")
 
-    def sendUserUploads(self, chatid, user, nmax = None):
+    def sendUserUploads(self, chatid, user, chatdb, nmax = None):
         usermedia = user.getUploadedContent(self)
         usermediasort = self.sortMediaListScore(usermedia, nmax)
         for media in usermediasort:
-            media.showMediaShow(chatid, self)
+            media.showMediaShow(chatid, self, chatdb=chatdb)
 
     def generateUserList(self, sort = None, nmax = None, excluded_ids = []):
 
