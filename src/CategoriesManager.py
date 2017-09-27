@@ -110,14 +110,14 @@ class Categories:
         self.bot.sendMessage(chatid, m, parse_mode = "HTML")
     
     def categoryPrice(self, user):
-        return (1000 + int(user.getReputation() / 1000))
+        return (500 + int(user.getReputation() / 1000))
                 
     def addCategory(self, chatid, user):
         # chatid must be private, checked in the handle
         self.sendSelectCategoryMenu(chatid, sort=True)
 
         sdb = {}
-        sdb["price"] = em.Pstr(1000 + int(user.getReputation() / 1000), True)
+        sdb["price"] = em.Pstr(self.categoryPrice(), True)
         sdb["points"] = user.getPointsStr(True)
 
         m = "Send a category name\n"
@@ -168,7 +168,7 @@ class Categories:
                 if is_valid_name:
                     # create message
 
-                    price = 1000 + int(user.getReputation() / 1000)
+                    price = self.categoryPrice()
 
                     sdb = {}
                     sdb["catname"] = categoryname
@@ -232,7 +232,7 @@ class Categories:
             minutes, seconds = divmod(dtime.seconds, 60)
             hours, minutes = divmod(minutes, 60)
 
-            cost = int(100 + user.getReputation()/1000)
+            cost = int(40 + user.getReputation()/1000)
             button_buyups = InlineKeyboardButton(
 
             text='buy 5 uploads for' + str(em.Pstr(cost)),
@@ -710,11 +710,31 @@ class Categories:
         else:
             self.bot.sendMessage(chatid, "ShowTop: Category not found")
 
-    def sendUserUploads(self, chatid, user, chatdb, nmax = None):
+    def sendUserUploads(self, chatid, user, chatdb):
         usermedia = user.getUploadedContent(self)
-        usermediasort = self.sortMediaListScore(usermedia, nmax)
+        usermediasort = self.sortMediaListScore(usermedia, "all")
+        
+        s = "----- MY UPLOADS-----\n"
+        
+        postion = 1
         for media in usermediasort:
-            media.showMediaShow(chatid, self, chatdb=chatdb)
+            
+            # number | mediatype | category | upvotes | downvotes | Score
+            sdb = {}
+            sdb["number"] = postion
+            sdb["mediatype"] = media.content.type
+            sdb["category"] = media.catname
+            sdb["upvotes"] = media.upvote
+            sdb["downvotes"] = media.downvote
+            sdb["score"] = media.getScore()
+            sdb["upem"] = em.upvote_emoji
+            sdb["doem"] = em.downvote_emoji
+            
+            s += "{number}. | {mediatype} | {category}\n{upvotes}{upem}{doem}{downvotes} | score: {score} \n /show_{category}_{number}\n\n".format(**sdb)
+            
+            postion += 1
+        
+        self.bot.sendMessage(chatid, s, parse_mode="HTML")
 
     def generateUserList(self, sort = None, nmax = None, excluded_ids = []):
 

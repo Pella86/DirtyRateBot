@@ -124,7 +124,11 @@ rem_categories_request_msg = "Pick categories to remove from the group, comma se
 
 #%% TO DO
 
-# 1/2 the price for a category
+# cambiare classifica
+
+# insert time
+
+# all time top
 
 # rename rep points in shield points and points in coins
 
@@ -494,9 +498,9 @@ def handle(msg):
                                 pass
                             except Exception as e:
                                 print(e)
-                        categories.sendUserUploads(mymsg.chat.id, user, chatsdb, nmax)
+                        categories.sendUserUploads(mymsg.chat.id, user, chatsdb)
                     else:
-                        categories.sendUserUploads(mymsg.chat.id, user, chatsdb, nmax)
+                        categories.sendUserUploads(mymsg.chat.id, user, chatsdb)
 
                 elif mymsg.content.text == "/profile":
                     lg.log("requested profile")
