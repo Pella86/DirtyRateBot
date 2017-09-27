@@ -22,6 +22,7 @@ import datetime
 import urllib3
 import datetime
 import random
+import re
 
 # my imports
 from LogTimes import Logger
@@ -501,71 +502,48 @@ def handle(msg):
                     lg.log("requested profile")
                     user.sendProfileInfo(mymsg.chat.id, bot, categories)
 
-                elif mymsg.content.text.startswith("/show_top"):
-                    lg.log("requested top")
-                    # show_top_categoryname
-                    # show_top categoryname nmax
-
+                elif mymsg.content.text.startswith("/show_"):
+                    lg.log("requested show")
+                    
+                    param = re.split(" |_", mymsg.content.text)
+                    print(param)
+                    
                     categoryname = ""
                     nmax = 3
+                    uid = None
 
-                    command = mymsg.content.text.split("_")
-
-                    if len(command) == 3:
-                        categoryname = command[2]
-                    if len(command) == 2:
-
-                        param = command[1]
-                        parpar = param.split(' ')
-                        print(parpar)
-                        if len(parpar) >= 2:
-                            categoryname = parpar[1]
-                        if len(parpar) == 3:
-                            if parpar[2] == "all":
+                    if param[1] == "top":
+                        categoryname = param[2]
+                        if len(param) == 4:
+                            if param[3] == "all":
                                 nmax = "all"
                             else:
                                 try:
-                                    nmax = int(parpar[2])
+                                    nmax = int(param[3])
                                 except ValueError:
                                     nmax = 3
-
-                    lg.log("{0} {1}".format(categoryname, nmax))
-                    if categoryname:
-                        categories.sendShowTop(mymsg.chat.id, categoryname, chatsdb, nmax)
+                        
+                        lg.log("{0} {1}".format(categoryname, nmax))
+                        if categoryname:
+                            categories.sendShowTop(mymsg.chat.id, categoryname, chatsdb, nmax)
+                        else:
+                            bot.sendMessage(mymsg.chat.id, "Usage: show_top [category] [number of pictures]\n/main_menu")          
                     else:
-                        bot.sendMessage(mymsg.chat.id, "Usage: show_top [category] [number of pictures]\n/main_menu")
-
-                elif mymsg.content.text.startswith("/show_"):
-                    lg.log("requested show media")
-                    commands = mymsg.content.text.split("_", maxsplit= 1)[1:]
-                    if len(commands) == 1:
-                        commands = commands[0]
-                        param = commands.split(' ')
-                        if len(param) == 1:
-                            param = param[0].split('_')
-
-                        if len(param) == 1:
-                            categoryname = param[0]
+                        categoryname = param[1]
+                        if len(param) == 3:
+                            uid = int(param[2])
+                            for dmedia in categories.media_vote_db.values():
+                                media = dmedia.getData()
+                                if media.uid == uid:
+                                    lg.log(str(media))
+                                    media.showMediaShow(mymsg.chat.id, categories, chatdb=chatsdb)
+                                    break
+                        else:
                             print("requested show for: ", categoryname)
-                            categories.showCategoryPrivate(mymsg.chat.id, user, categoryname, chatsdb)
-
-                        if len(param) == 2:
-                            categoryname = param[0]
-                            uid = None
-
-                            try:
-                                uid = int(param[1])
-
-                            except ValueError:
-                                print("commands ", commands, "not formatted correctly")
-
-                            if uid is not None:
-                                for dmedia in categories.media_vote_db.values():
-                                    media = dmedia.getData()
-                                    if media.uid == uid:
-                                        lg.log(str(media))
-                                        media.showMediaShow(mymsg.chat.id, categories, chatdb=chatsdb)
-                                        break
+                            categories.showCategoryPrivate(mymsg.chat.id, user, categoryname, chatsdb)                            
+                        
+                        
+ 
 
 
                 elif mymsg.content.text.startswith("/user_top"):

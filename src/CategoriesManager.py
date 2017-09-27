@@ -160,7 +160,7 @@ class Categories:
                             break
                         
                 if is_valid_name:
-                    if categoryname in map(list(self.categories_db.keys()), str.lower()):
+                    if categoryname.lower() in map(list(self.categories_db.keys()), str.lower()) and categoryname.lower() != "top":
                         is_valid_name = False
                 
                 # if the name is valid
