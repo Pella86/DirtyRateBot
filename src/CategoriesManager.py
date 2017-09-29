@@ -938,31 +938,31 @@ class Categories:
 
 
     def sendUserTop(self,chatid, requser, ipage=None):
-        '''' This function sends the users topcharts '''
+        '''' This function sends the users topcharts 
+        The first 5 users are represented in a nice page
+        the subsequent in a table format
+        '''
 
-        userlist = self.generateUserList(sort=["reputation", "karma"], excluded_ids=[creator_id])
+        #userlist = self.generateUserList(sort=["reputation", "karma"], excluded_ids=[creator_id])
+        userlist = self.generateUserList(sort=["reputation", "karma"], excluded_ids=[])
         
         if ipage == None or ipage == 1:
             maxperpage = 5
-        else:
-            maxperpage = 10
-            
-            
-        # generate the sliced list
-
-        ulistpage, page, maxpage = self.sliceListForPage(userlist, ipage, maxperpage)
-        
-        # prepare the message title
-        if page == 1:
             topstr = "Top 5"
         else:
-            ipos = 5 + (page - 2) * maxpage + 1
-            topstr = "Form {} to {}".format(ipos, ipos + maxperpage)
-        
+            maxperpage = 15
+            ipos = 5 + (ipage - 2) * maxperpage + 1
+            topstr = "Form {} to {}".format(ipos, ipos + maxperpage)            
+            
+        # message title
+        # From x to y User Chart
         s = '<b>--- {} User Chart ---</b>\n'.format(topstr)
         s += "\n"
-        
-        # prepare the display of the chart
+
+        # generate the sliced list
+        ulistpage, page, maxpage = self.sliceListForPage(userlist, ipage, maxperpage)
+
+        # prepare the display of the chart 
         if page == 1:
             position = 1
         else:
@@ -987,20 +987,19 @@ class Categories:
                 sdb["you"] = "" 
             
             if page == 1:
-                
                 s += "<b>{position}. {anonid}{you}</b>\n<code> reputation: {reputation}\n karma: {karma}</code> \n\n".format(**sdb)
             else:
+                # prepare the spaces for the numbers
+                fillcharposition = len(str(position + maxperpage))
                 
-                if  position ==  5 + (page-2) * maxperpage + 1:
-                    fillcharposition = len(str(position + maxperpage))
-                
-                    
+                # set the number aligned to the left    
                 sdb["fposition"] = "{position: <{0}}".format(fillcharposition, position=sdb["position"])
                 
                 s += "<code>{fposition}.{anonid:_^15}{you}|{reputation}|{karma}</code>\n".format(**sdb)
             
             position += 1
         
+        # insert an new line if in table representation
         if page != 1:
             s += "\n"
         
@@ -1020,12 +1019,12 @@ class Categories:
             sdb["you"] = "(you)"
             s += "...\n{position}. {anonid}{you}|R{reputation}|K{karma}\n...\n".format(**sdb)
         
+        # add the number of users
         s += "\n"
         tot_users = len(userlist)
         s += "<i>Total Users: " + str(tot_users) + "</i>\n"
-
         
-
+        # format the page
         self.sendPage(chatid, maxpage, maxperpage, s, page, ipage, "cmput")
 
     def checkNickname(self, chatid, user, nickname):

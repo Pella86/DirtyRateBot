@@ -152,6 +152,8 @@ rem_categories_request_msg = "Pick categories to remove from the group, comma se
 
 # !lua return sendChatAction(-1001065772922, 'typing')
 
+# insert /help_soruce_code
+
 #%% Helper functions
 
 def calc_rep_cost(user, rpq):
@@ -944,9 +946,8 @@ def query(msg):
         userid = int(commands[2])
 
         user = categories.user_profile_db.getData(userid).getData()
-
-        if user.receive_notifications[nottag]:
-
+        
+        if nottag not in user.receive_notifications or user.receive_notifications[nottag]:
             user.receive_notifications[nottag] = False
             bot.answerCallbackQuery(query_id, text= nottag + " muted")
 
