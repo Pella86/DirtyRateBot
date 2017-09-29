@@ -124,11 +124,11 @@ rem_categories_request_msg = "Pick categories to remove from the group, comma se
 
 #%% TO DO
 
-# cambiare classifica
-
 # insert time
 
 # all time top
+
+# expand keyboard to navigate pages (>1 >10 >100 ...)
 
 # rename rep points in shield points and points in coins
 
@@ -137,6 +137,9 @@ rem_categories_request_msg = "Pick categories to remove from the group, comma se
 # create statistics
 
 # create anti spam
+
+# insert ban reporting user
+# insert already reported for categories
 
 # construct a showing interface for the media
 #  example -> prev < top random > next
@@ -484,24 +487,8 @@ def handle(msg):
 
                 elif mymsg.content.text.startswith("/my_uploads"):
                     lg.log("requested my uploads")
-                    command = mymsg.content.text.split(' ')
-
-                    nmax = 3
-
-                    if len(command) == 2:
-                        if command[1] == "all":
-                            nmax = "all"
-                        else:
-                            try:
-                                nmax = int(command[1])
-                            except ValueError:
-                                pass
-                            except Exception as e:
-                                print(e)
-                        categories.sendUserUploads(mymsg.chat.id, user, chatsdb)
-                    else:
-                        categories.sendUserUploads(mymsg.chat.id, user, chatsdb)
-
+                    categories.sendUserUploadsPage(mymsg.chat.id, user, chatsdb)
+                    
                 elif mymsg.content.text == "/profile":
                     lg.log("requested profile")
                     user.sendProfileInfo(mymsg.chat.id, bot, categories)
@@ -545,14 +532,14 @@ def handle(msg):
                         else:
                             print("requested show for: ", categoryname)
                             categories.showCategoryPrivate(mymsg.chat.id, user, categoryname, chatsdb)                            
-                        
-                        
- 
-
 
                 elif mymsg.content.text.startswith("/user_top"):
                     lg.log("requested top")
-                    categories.sendUserTop(mymsg.chat.id, ['reputation', 'karma'], user)
+                    args = mymsg.content.text.split("_")
+                    if len(args) == 2:
+                        categories.sendUserTop(mymsg.chat.id, user)
+                    else:
+                        categories.sendUserTopCategory(mymsg.chat.id, user, args[2:])
 
                 elif mymsg.content.text.startswith("/vote"):
 
@@ -969,37 +956,86 @@ def query(msg):
             bot.answerCallbackQuery(query_id, text= nottag + " already muted")
 
     elif query_data.startswith("cmp"):
-        args = query_data.split("_", maxsplit = 1)[1:]
-        page = int(args[0])
+        args = query_data.split("_")
+        page = int(args[1])
 
         cbkquery = CbkQuery(msg)
 
         topmedia = False
         menu = False
         user = None
+        sendMenu = True
+        
 
         if query_data.startswith("cmps_"):
             pass
+        
         elif query_data.startswith("cmptm_"):
             topmedia = True
             user = categories.user_profile_db.getData(cbkquery.person.id).getData()
+        
+        elif query_data.startswith("cmpuu_"):
+            user = categories.user_profile_db.getData(cbkquery.person.id).getData()
+            try:
+                categories.sendUserUploadsPage(cbkquery.getChatMsgID(), user, chatsdb, page)
+            except TelegramError as e:
+                if e.error_code == 400:
+                    if page == 1:
+                        bot.answerCallbackQuery(query_id, text ="Reached first page")
+                    else:
+                        bot.answerCallbackQuery(query_id, text ="Reached last page")
+                else:
+                    raise e
+            sendMenu = False
+        
+        elif query_data.startswith("cmput_"):
+            user = categories.user_profile_db.getData(cbkquery.person.id).getData()
+            try:
+                categories.sendUserTop(cbkquery.getChatMsgID(), user,  page)
+            except TelegramError as e:
+                if e.error_code == 400:
+                    if page == 1:
+                        bot.answerCallbackQuery(query_id, text ="Reached first page")
+                    else:
+                        bot.answerCallbackQuery(query_id, text ="Reached last page")
+                else:
+                    raise e
+            sendMenu = False
+        elif query_data.startswith("cmputc_"):
+            user = categories.user_profile_db.getData(cbkquery.person.id).getData()
+            catnames = args[2:]
+            print(args)
+            print(catnames)
+            try:
+                categories.sendUserTopCategory(cbkquery.getChatMsgID(), user, catnames,  page)
+            except TelegramError as e:
+                if e.error_code == 400:
+                    if page == 1:
+                        bot.answerCallbackQuery(query_id, text ="Reached first page")
+                    else:
+                        bot.answerCallbackQuery(query_id, text ="Reached last page")
+                else:
+                    raise e
+            sendMenu = False
+        
+            
         else:
             menu = True
             user = categories.user_profile_db.getData(cbkquery.person.id).getData()
 
-
-        try:
-            categories.sendSelectCategoryMenu(cbkquery.getChatMsgID(), ipage=page, sort=True, menu=menu, topmedia=topmedia, user=user )
-            bot.answerCallbackQuery(query_id, text ="Page " + str(page))
-
-        except TelegramError as e:
-            if e.error_code == 400:
-                if page == 1:
-                    bot.answerCallbackQuery(query_id, text ="Reached first page")
+        if sendMenu:
+            try:
+                categories.sendSelectCategoryMenu(cbkquery.getChatMsgID(), ipage=page, sort=True, menu=menu, topmedia=topmedia, user=user )
+                bot.answerCallbackQuery(query_id, text ="Page " + str(page))
+    
+            except TelegramError as e:
+                if e.error_code == 400:
+                    if page == 1:
+                        bot.answerCallbackQuery(query_id, text ="Reached first page")
+                    else:
+                        bot.answerCallbackQuery(query_id, text ="Reached last page")
                 else:
-                    bot.answerCallbackQuery(query_id, text ="Reached last page")
-            else:
-                raise e
+                    raise e
 
     elif query_data.startswith("buy_"):
         # the buy call back has to do with anything that costs money        
@@ -1354,7 +1390,24 @@ if __name__ == "__main__":
                 ).run_as_thread()
 
     announce = Announcement(bot, categories, chatsdb)
-    announce.announce_all_users("Hello this is a test message, I'm testing a new function of the bot, turn down notifications, you'll get a load of messages.")
+    
+    msg = "Hello beta testers,\n"
+    msg += "New features in the bot:\n"
+    msg += "- Sending this messages to the whole community\n"
+    msg += "- Sending a summary every day\n"
+    msg += "- Possibility to delete media\n"
+    msg += "- Nicer /my_uploads presentation\n"
+    msg += "- Reduced price to buy more uploads (base price 50) and to buy a category (base price 500)\n"
+    msg += "- Nicer user top chart presentation(/user_top)\n"
+    msg += "- user top chart per category\n"
+    msg += "\n"
+    msg += "Upcoming features:\n"
+    msg += "- media will lose karma with time\n"
+    msg += "- translation\n"
+    msg += "\n"
+    msg += "Happy protting."
+    
+    announce.announce_all_users(msg)
     
     announce.run_daily()
 

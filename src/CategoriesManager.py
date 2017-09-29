@@ -287,7 +287,7 @@ class Categories:
             cat = dcat.getData()
             if not cat.deleted:
                 catnamelist.append(cat.name.lower())
-        return catnamelist
+        return catnamelist 
 
     def sendSelectCategoryMenu(self, chatid, ipage = None, sort = False, menu = False, topmedia=False, user = None):
 
@@ -604,6 +604,8 @@ class Categories:
 
 
         m += ("{trophy} /show_top_{catname} {trophy}\n\n").format(**sdb)
+        
+        m += "{trophy} /user_top_{catname} {trophy}\n\n".format(**sdb)
 
         return m
 
@@ -709,19 +711,44 @@ class Categories:
                 media.showMediaShow(chatid, self, beforeinfo, chatdb=chatsdb)
         else:
             self.bot.sendMessage(chatid, "ShowTop: Category not found")
+            
+    def sliceListForPage(self, the_list, ipage, max_elements_per_page):
+        cll = len(the_list)
+        maxpage = math.ceil(cll / max_elements_per_page)
+        
+        # set minimal value
+        page = 1 if ipage is None or ipage < 1 else ipage
 
-    def sendUserUploads(self, chatid, user, chatdb):
+        # set max value to be max page
+        page = maxpage if page >= maxpage else page
+
+        # slice the upload list
+        offsetmin = (page - 1) * max_elements_per_page
+        offsetmax = page * max_elements_per_page
+
+        rlist = the_list[offsetmin:offsetmax]
+
+        return rlist, page, maxpage     
+    
+        
+    
+    def sendUserUploadsPage(self, chatid, user, chatdb, ipage = None):
         usermedia = user.getUploadedContent(self)
         usermediasort = self.sortMediaListScore(usermedia, "all")
         
-        s = "----- MY UPLOADS-----\n"
+        maxupsperpage = 5
         
-        postion = 1
-        for media in usermediasort:
+        upinpage, page, maxpage = self.sliceListForPage(usermediasort, ipage, maxupsperpage)
+
+        # build the string
+        s = "----- MY UPLOADS-----\n"
+        postion = (page - 1) * maxpage
+        for media in upinpage:
             
             # number | mediatype | category | upvotes | downvotes | Score
             sdb = {}
             sdb["number"] = postion
+            sdb["uid"] = media.uid
             sdb["mediatype"] = media.content.type
             sdb["category"] = media.catname
             sdb["upvotes"] = media.upvote
@@ -730,20 +757,80 @@ class Categories:
             sdb["upem"] = em.upvote_emoji
             sdb["doem"] = em.downvote_emoji
             
-            s += "{number}. | {mediatype} | {category}\n{upvotes}{upem}{doem}{downvotes} | score: {score} \n /show_{category}_{number}\n\n".format(**sdb)
+            s += "{number}. | {mediatype} | {category}\n{upvotes}{upem}{doem}{downvotes} | score: {score} \n /show_{category}_{uid}\n\n".format(**sdb)
             
             postion += 1
+            
+
+        # create keyboard
+        querytag = "cmpuu"
         
-        self.bot.sendMessage(chatid, s, parse_mode="HTML")
+        self.sendPage(chatid, maxpage, maxupsperpage, s, page, ipage, querytag)
+    
+    def sendPage(self, chatid, maxpage, max_elements_per_page, message, page, ipage, querytag, args = []):
 
-    def generateUserList(self, sort = None, nmax = None, excluded_ids = []):
+        message += "/main_menu | Page: {page}/{maxpage}".format(page=page, maxpage=maxpage)
+        
+        prevpage = 1
+        if page > 1:
+            prevpage = page - 1
+        cbprevpage = querytag + "_" + str(prevpage)
+        bprev = InlineKeyboardButton(
+                text = "< previous",
+                callback_data=cbprevpage
+                )
+        if args:
+            for arg in args:
+                cbprevpage += "_" + str(arg)
 
+
+        nextpage = maxpage
+        if page < maxpage:
+            nextpage = page + 1
+        cbnextpage = querytag + "_" + str(nextpage) 
+        if args:
+            for arg in args:
+                cbnextpage += "_" + str(arg)
+
+        bnext = InlineKeyboardButton(
+                text = "next >",
+                callback_data=cbnextpage
+                )
+
+        rmk = InlineKeyboardMarkup(inline_keyboard=[[bprev,bnext],])
+
+
+        if ipage is None:
+            self.bot.sendMessage(chatid, message, parse_mode = "HTML", reply_markup = rmk)
+        else:
+            self.bot.editMessageText(chatid, message, parse_mode = "HTML", reply_markup = rmk)        
+
+
+    def generateUserList(self, sort = None, nmax = None, excluded_ids = [], catnames = []):
+        ''' This function generate a user list, if all the parameters are defaulted 
+        the function will return the whole user list
+        '''
+    
         # get the whole users list
         userlist = []
         for duser in self.user_profile_db.values():
             user = duser.getData()
+            
+            add_user = False
+            if catnames:
+                usermedialist = user.getUploadedContent(self)
+                for media in usermedialist:
+                    if media.catname in catnames:
+                        add_user = True
+                 
             if user.id not in excluded_ids:
-                userlist.append(user)
+                if catnames and add_user:
+                    userlist.append(user)
+                if not catnames:
+                    userlist.append(user)
+        
+        if not userlist:
+            return userlist
 
         if type(sort) == str:
             sort = [sort]
@@ -774,38 +861,172 @@ class Categories:
             with open(file, 'r') as f:
                 for user in userlist:
                     f.write(str(user) + '\n')
+    
+    def sendUserTopCategory(self, chatid, requser, catnames, ipage=None):
+        
+        userlist = self.generateUserList(sort=["reputation", "karma"], excluded_ids=[creator_id], catnames=catnames)
+        
+        if userlist:
+            
+            maxperpage = 10
+        
+            ulistpage, page, maxpage = self.sliceListForPage(userlist, ipage, maxperpage)
+            
+            
+            
+            sdb = {}
+            sdb["ipos"] = (page - 1) * maxpage + 1
+            sdb["endpos"] = sdb["ipos"] + maxpage
+            sdb["catnames"] = "|".join(catnames)
+            
+            
+            s = '<b>--- For the categories: {catnames} ---</b>\n'.format(**sdb)
+            s += 'Form {ipos} to {endpos} User Chart\n'.format(**sdb)
+            s += "\n"   
+            
+            position = (page-1) * maxpage + 1
+            is_user_in_page = False
+            fillcharposition = "0"
 
-    def sendUserTop(self,chatid, sort, requser, nmax = None):
-        userlist = self.generateUserList(sort=sort, nmax=nmax, excluded_ids=[creator_id])
-        # generate the message
-        # 1. 2. 3. 4. 5. ... user ... totusers
-        # make pages?
-        s = '<b>--- Top 5 User Chart ---</b>\n'
-        s += "\n"
-        c = 0
-        for i, user in enumerate(userlist):
-            c += 1
-            if i < 5:
-                s += str(c) + ". "
+            for user in ulistpage:
+                # prepare the variables to be printed such position and reputation
+                sdb = {}
+                sdb["position"] = position
+                sdb["anonid"] = user.anonid
+                sdb["reputation"] = user.getReputationStr()
+                sdb["karma"] = user.getKarmaStr()
+                
+                # if the user is in this page it gets a (you) tag and is not displayed
+                # at the chart bottom
                 if user.id == requser.id:
-                    s += "User " + user.getPrettyFormat(True)
-                    print(user)
+                    is_user_in_page = True
+                    sdb["you"] = "(you)"
                 else:
-                    s += "User " + user.getPrettyFormat()
-                    print(user)
-                s += "\n"
-                s += "\n"
+                    sdb["you"] = "" 
+                   
+                if  position ==  5 + (page-2) * maxperpage + 1:
+                    fillcharposition = len(str(position + maxperpage))
+ 
+                sdb["fposition"] = "{position: <{0}}".format(fillcharposition, position=sdb["position"])
+                s += "<code>{fposition}.{anonid:_^15}{you}|{reputation}|{karma}</code>\n".format(**sdb)
+                
+                position += 1    
+        
+            if not is_user_in_page:
+                # find the requser position
+                position = 0
+                for user in userlist:
+                    position += 1
+                    if user.id == requser.id:
+                        break
+                    
+                sdb = {}
+                sdb["position"] = position
+                sdb["anonid"] = requser.anonid
+                sdb["reputation"] = requser.getReputationStr()
+                sdb["karma"] = requser.getKarmaStr()
+                sdb["you"] = "(you)"
+                s += "...\n{position}. {anonid}{you}|R{reputation}|K{karma}\n...\n".format(**sdb)
+            
+            s += "\n"
+            tot_users = len(userlist)
+            s += "<i>Users in this category: " + str(tot_users) + "</i>\n"
+
+            self.sendPage(chatid, maxpage, maxperpage, s, page, ipage, "cmputc")            
+            
+            
+
+
+    def sendUserTop(self,chatid, requser, ipage=None):
+        '''' This function sends the users topcharts '''
+
+        userlist = self.generateUserList(sort=["reputation", "karma"], excluded_ids=[creator_id])
+        
+        if ipage == None or ipage == 1:
+            maxperpage = 5
+        else:
+            maxperpage = 10
+            
+            
+        # generate the sliced list
+
+        ulistpage, page, maxpage = self.sliceListForPage(userlist, ipage, maxperpage)
+        
+        # prepare the message title
+        if page == 1:
+            topstr = "Top 5"
+        else:
+            ipos = 5 + (page - 2) * maxpage + 1
+            topstr = "Form {} to {}".format(ipos, ipos + maxperpage)
+        
+        s = '<b>--- {} User Chart ---</b>\n'.format(topstr)
+        s += "\n"
+        
+        # prepare the display of the chart
+        if page == 1:
+            position = 1
+        else:
+            position = 5 + (page-2) * maxperpage + 1
+
+        is_user_in_page = False
+        fillcharposition = "0"
+        for user in ulistpage:
+            # prepare the variables to be printed such position and reputation
+            sdb = {}
+            sdb["position"] = position
+            sdb["anonid"] = user.anonid
+            sdb["reputation"] = user.getReputationStr()
+            sdb["karma"] = user.getKarmaStr()
+            
+            # if the user is in this page it gets a (you) tag and is not displayed
+            # at the chart bottom
+            if user.id == requser.id:
+                is_user_in_page = True
+                sdb["you"] = "(you)"
             else:
+                sdb["you"] = "" 
+            
+            if page == 1:
+                
+                s += "<b>{position}. {anonid}{you}</b>\n<code> reputation: {reputation}\n karma: {karma}</code> \n\n".format(**sdb)
+            else:
+                
+                if  position ==  5 + (page-2) * maxperpage + 1:
+                    fillcharposition = len(str(position + maxperpage))
+                
+                    
+                sdb["fposition"] = "{position: <{0}}".format(fillcharposition, position=sdb["position"])
+                
+                s += "<code>{fposition}.{anonid:_^15}{you}|{reputation}|{karma}</code>\n".format(**sdb)
+            
+            position += 1
+        
+        if page != 1:
+            s += "\n"
+        
+        if not is_user_in_page:
+            # find the requser position
+            position = 0
+            for user in userlist:
+                position += 1
                 if user.id == requser.id:
-                    s += "...\n"
-                    s += str(c) + ". " + "User " +  user.getPrettyFormat(True) + "\n"
-                    s += "\n"
-                    print(user)
-        s += "<i>Total Users: " + str(c) + "</i>\n"
+                    break
+                
+            sdb = {}
+            sdb["position"] = position
+            sdb["anonid"] = requser.anonid
+            sdb["reputation"] = requser.getReputationStr()
+            sdb["karma"] = requser.getKarmaStr()
+            sdb["you"] = "(you)"
+            s += "...\n{position}. {anonid}{you}|R{reputation}|K{karma}\n...\n".format(**sdb)
+        
+        s += "\n"
+        tot_users = len(userlist)
+        s += "<i>Total Users: " + str(tot_users) + "</i>\n"
 
-        s += "/main_menu"
+        
 
-        self.bot.sendMessage(chatid, s, parse_mode = "HTML")
+        self.sendPage(chatid, maxpage, maxperpage, s, page, ipage, "cmput")
 
     def checkNickname(self, chatid, user, nickname):
         # the nickname can be min 3 char long and max 15 char long

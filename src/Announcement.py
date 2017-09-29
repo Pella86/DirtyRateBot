@@ -31,7 +31,7 @@ class Announcement:
             os.mkdir(succssessdir)
         
         # create a log file for the custom announcments
-        self.successfile = "./data/announcements/success_log.txt"
+        self.successfile = "./data/announcements/main_success_log.txt"
         if os.path.isfile(self.successfile):
             with open(self.successfile, 'r') as f:
                 lines = f.readlines()
