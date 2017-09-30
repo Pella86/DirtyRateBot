@@ -61,22 +61,22 @@ class NEM:
 class Pstr(NEM):
     
     def __init__(self, n, long = False):
-        super().__init__(n, points_emoji)
+        super().__init__(n, points_emoji, long)
     
 class Kstr(NEM):
  
     def __init__(self, n, long = False):
-        super().__init__(n, karma_emoji)   
+        super().__init__(n, karma_emoji, long)   
 
 class Rstr(NEM):
 
     def __init__(self, n, long = False):
-        super().__init__(n, reputation_emoji)  
+        super().__init__(n, reputation_emoji, long)  
 
 class RPstr(NEM):
     
     def __init__(self, n, long = False):
-        super().__init__(n, reputation_points_emoji)      
+        super().__init__(n, reputation_points_emoji, long)      
 
 if __name__ == "__main__":
     print(Kstr(19))

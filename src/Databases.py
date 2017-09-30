@@ -10,9 +10,7 @@ Created on Sun Jul 23 11:07:51 2017
 # create a content daatabase for fast access to content
 
 # create a chat database to keep track of new chats
-
-from os.path import isfile, join, split, splitext
-from os import listdir
+import os
 import pickle
 
 #==============================================================================
@@ -21,8 +19,8 @@ import pickle
 
 def get_pathname(path):
     ''' Little function to split the path in path, name, extension'''
-    path, nameext = split(path)
-    name, ext = splitext(nameext)
+    path, nameext = os.path.split(path)
+    name, ext = os.path.splitext(nameext)
     return path, name, ext
 
 #==============================================================================
@@ -73,6 +71,12 @@ class Database:
         print("data not in database, so is new")
         return True
     
+    def getDataList(self):
+        dlist = []
+        for element in self.database.values():
+            dlist.append(element.getData())
+        return dlist
+    
     def getData(self, dataid):
         return self.database[dataid]
     
@@ -85,13 +89,13 @@ class Database:
     
     def loadDb(self):
         # for file in folder if extension is pickle load
-        names = [join(self.dbfolder, f) for f in listdir(self.dbfolder)]
+        names = [os.path.join(self.dbfolder, f) for f in os.listdir(self.dbfolder)]
         
         tmp_db = {}
         c = 0
         for name in names:
             _ , _ , ext = get_pathname(name)
-            if ext == ".pickle" and isfile(name):
+            if ext == ".pickle" and os.path.isfile(name):
                 
                 with open(name, 'rb') as f:
                     data = pickle.load(f)
@@ -117,6 +121,21 @@ class Database:
                 with open(filename, 'wb') as f:
                     pickle.dump(data, f)
                 data.hasChanged = False
+
+    def updateDatabaseEntry(self, attributes, success_file = ""):
+        if os.path.isfile(success_file):
+            raise Exception("File already exist")
+            
+        for delement in self.database.values():
+            element = delement.getData()
+            for attr_name, attr_value in attributes.items():
+                element.__setattr__(attr_name, attr_value(element))
+            delement.setData(element)
+        self.updateDb()
+        
+        if success_file:
+            with open(success_file, "w") as f:
+                f.write("success: " + self.dbfolder)
     
     
         

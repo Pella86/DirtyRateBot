@@ -9,6 +9,7 @@ Created on Sat Aug 19 13:52:52 2017
 # Imports
 #==============================================================================
 
+import datetime
 
 # telepot imports
 from telepot.namedtuple import (InlineKeyboardMarkup, InlineKeyboardButton)
@@ -51,6 +52,9 @@ class ContentVote:
         self.deleted = False
 
         self.reported_by = [] # person id
+        
+        # date
+        self.creation_date = datetime.datetime.now()
 
     def __str__(self):
         sdb ={}
@@ -58,7 +62,8 @@ class ContentVote:
         sdb['uid'] = self.uid
         sdb['content'] = self.content.type
         sdb['category'] = self.catname
-        return"{category} | {uid} | {content} | Uploader {user}".format(**sdb)
+        sdb['creation'] = self.creation_date.strftime("%y%m%d:%Hh")
+        return"{category} | {uid} | {content} | {creation}| Uploader {user}".format(**sdb)
         
     def getCategory(self, catdb):
         return catdb.getData(self.catname).getData()
@@ -99,8 +104,18 @@ class ContentVote:
         return self.upvote + self.downvote
 
     def getScore(self):
-        return self.getKarma() * self.getReputation()
-
+        # karma times reputation / days from upload
+        dtime = datetime.datetime.now() - self.creation_date
+        dtime = int(dtime.days)
+        return self.getKarma() * self.getReputation() / (dtime + 1)
+    
+    def getScoreF(self):
+        score = self.getScore()
+        if score >= 1:
+            return "{0:.0f}".format(score)
+        else:
+            return "{0:.2f}".format(score)
+        
     def makeKeyboardAdminPhoto(self):
         # add a button to flag the photo for deletion
         button_delete = InlineKeyboardButton(
@@ -124,7 +139,7 @@ class ContentVote:
         sdb["tag"] = "not defined"
         if catManager is not None:
             sdb["tag"] = str(catManager.categories_db.getData(self.catname).getData().tag)
-        sdb["score"] = self.getScore()
+        sdb["score"] = self.getScoreF()
         
         # pattern definition
         cpt = "User {user} upoaded the picture\n"
@@ -266,17 +281,19 @@ class ContentVote:
         elif self.content.type == "video":
             bot.sendVideo(chatid, file_id, caption = cpt, reply_markup = rmk)
         elif self.content.type == "document":
-            bot.sendDocument(chatid, file_id, caption = cpt, reply_markup = rmk)   
-
+            bot.sendDocument(chatid, file_id, caption = cpt, reply_markup = rmk)  
+    
 
     def showMediaVote(self, chatid, catManager, chatsdb):
         # shows the media wit voting options
+        
+        cat_screen_name = self.getCategory(catManager.categories_db).screen_name
         
         cpt = ""
         
         cpt += self.createUploaderTag(catManager.user_profile_db)
 
-        cpt += "/vote_" + self.catname + " or /main_menu"
+        cpt += "/vote_" + cat_screen_name + " or /main_menu"
         
         # keyboard
         chattinguser = None
@@ -300,13 +317,15 @@ class ContentVote:
     def showMediaVotePublic(self, chatid, catManager):
         # shows the media wit voting options
         
+        cat_screen_name = self.getCategory(catManager.categories_db).screen_name
+        
         cpt = ""
         
         cpt += self.createUploaderTag(catManager.user_profile_db)
         
-        cpt += "Category: " + self.catname + "\n"
+        cpt += "Category: " + cat_screen_name + "\n"
         
-        cpt += "Score: " + em.suffix_numbers(self.getScore()) + "\n"
+        cpt += "Score: " + em.suffix_numbers(self.getScoreF()) + "\n"
         
         cpt += "/vote"
         
@@ -320,7 +339,9 @@ class ContentVote:
 
     def showMediaShow(self, chatid, catManager, beforeinfo = None, afterinfo = None, chatdb = None):
         # just shows the media        
-
+        
+        cat_screen_name = self.getCategory(catManager.categories_db).screen_name
+        
         # caption
         cpt = ""
 
@@ -329,10 +350,10 @@ class ContentVote:
         
         cpt += self.createUploaderTag(catManager.user_profile_db)
 
-        cpt += "Category: " + self.catname + "\n"
+        cpt += "Category: " + cat_screen_name + "\n"
 
         score = em.upvote_emoji +" {0} | {1} ".format(self.upvote, self.downvote)+em.downvote_emoji+" "
-        cpt += score + "Score: " + str(self.getScore()) + "\n"
+        cpt += score + "Score: " + str(self.getScoreF()) + "\n"
         
         #if the user voted all the media in a category
         

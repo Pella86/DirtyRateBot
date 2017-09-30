@@ -5,7 +5,7 @@ Created on Sun Jul 23 08:58:19 2017
 @author: Mauro
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 # import sys to access the src folder
@@ -123,8 +123,6 @@ add_categories_request_msg = "Pick categories to add in the group, comma separat
 rem_categories_request_msg = "Pick categories to remove from the group, comma separated (cat1, cat2, cat3), by replying to this message..."
 
 #%% TO DO
-
-# insert time
 
 # all time top
 
@@ -360,7 +358,7 @@ def handle(msg):
             cat_req = categories.new_cat_req.get(mymsg.chat.id)
             if cat_req is not None and cat_req[0]:
                 lg.log("create category: get category")
-                categories.getCategoryName(mymsg)
+                categories.getCategoryName(mymsg.chat.id, user, mymsg.content)
 
             elif mymsg.chat.id in categories.getuploadCategory and categories.getuploadCategory[mymsg.chat.id]:
                 lg.log("create MediaVote: get category")
@@ -384,25 +382,7 @@ def handle(msg):
 
                     categories.sendUploadCategory(mymsg)
                 else:
-                    dtime = datetime.timedelta(days = 1) - (datetime.datetime.now() - user.firstuploadtime)
-                    print(dtime, "\n")
-
-                    minutes, seconds = divmod(dtime.seconds, 60)
-                    hours, minutes = divmod(minutes, 60)
-
-                    cost = int(100 + user.getReputation()/1000)
-                    button_buyups = InlineKeyboardButton(
-
-                    text='buy 5 uploads for' + str(em.Pstr(cost)),
-                    callback_data='buy_uploads_' + str(cost)
-                     )
-                    keyboard = InlineKeyboardMarkup(
-                    inline_keyboard=[[button_buyups],]
-                    )
-                    rmk = keyboard
-
-                    bot.sendMessage(mymsg.chat.id, "Max upload reached! Missing {0}h and {1}m\nYou currently have {2}".format(hours, minutes, user.getPointsStr()), reply_markup = rmk)
-                    print("max upload reached")
+                    categories.sendMaxUploadMessage(chatid, user)
 
 
 
@@ -486,8 +466,7 @@ def handle(msg):
 
                 elif mymsg.content.text == "/upload":
                     lg.log("requested upload")
-                    categories.upload(mymsg)
-                    categories.sendUploadMedia(mymsg)
+                    categories.upload(mymsg.chat.id, user)
 
                 elif mymsg.content.text.startswith("/my_uploads"):
                     lg.log("requested my uploads")
@@ -1325,6 +1304,9 @@ class TestMessage:
 #    categories.user_profile_db.updateDb()
 
 
+
+
+
 #%% Inline query functions
 
 def on_inline_query(msg):
@@ -1375,14 +1357,29 @@ if __name__ == "__main__":
     print("Loading supergroups db")
     supergroupsdb.loadDb()
 
-
-
     bot = telepot.Bot(bot_token)
     answerer = telepot.helper.Answerer(bot)
 
     categories = Categories(bot)
+    
+    #categories.categories_db.updateDatabaseEntry({"screen_name": lambda x : x.name, "creation_date": lambda x : datetime.datetime.now()}, "./categories_update_success.txt")
+    
+    #categories.media_vote_db.updateDatabaseEntry({"creation_date": lambda x : datetime.datetime.now()}, "./media_update_success.txt")
+    
+#    def calcK(x):
+#        usermedia = x.getUploadedContent(categories)
+#        print(len(usermedia))
+#        return x.calculateKarma(usermedia)   
+#        
+#    
+#    categories.user_profile_db.updateDatabaseEntry({'karma': lambda x : calcK(x)}, "./user_profile_karma_update.txt")
 
-
+    for user in categories.user_profile_db.getDataList():
+        print("{:_^15}:".format(user.anonid), end=" ")
+        usermedia = user.getUploadedContent(categories)
+        print(len(usermedia), end=" ")
+        print(user.calculateKarma(usermedia))
+    
     lg.log("- Databases Loaded -", True)
     
     MessageLoop(bot, {'chat': handle,

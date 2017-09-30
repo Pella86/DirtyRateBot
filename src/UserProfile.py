@@ -163,17 +163,16 @@ class UserProfile:
         karma = 0
         for media in usermedia:
             karma += media.getScore()
-        return karma
+        return int(karma)
 
     def getKarma(self, categories = None):
         if self.karma is None and categories is not None:
-            print("updating chat karma...")
             usermedia = self.getUploadedContent(categories)
             self.karma = self.calculateKarma(usermedia)
         elif self.karma is None and categories is None:
             self.karma = 0
         
-        return self.karma
+        return int(self.karma)
 
     def getReputation(self):
         # transform reputation points into reputation
@@ -182,7 +181,7 @@ class UserProfile:
             reputation = self.rep_points * (self.getKarma() if self.getKarma() >= 1 else 1)
         else:
             reputation = 0
-        return reputation
+        return int(reputation)
 
     def getPointsStr(self, long = False):
         return str(em.Pstr(self.points, long))

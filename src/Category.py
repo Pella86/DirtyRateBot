@@ -9,6 +9,8 @@ Created on Sat Aug 19 15:09:58 2017
 # Imports
 #==============================================================================
 
+# pyimports
+import datetime
 
 # telepot imports
 from telepot.namedtuple import (InlineKeyboardMarkup, InlineKeyboardButton)
@@ -24,7 +26,11 @@ import emoji_table as em
 class Category:
 
     def __init__(self, name, tag = None, creator = None):
-        self.name = name # string max 15 characters in the ascii set
+        self.name = name.lower() # string max 15 characters in the ascii set
+        
+        self.screen_name = name
+        
+        self.creation_date = datetime.datetime.now()
         
         self.description = ""
         
@@ -56,7 +62,7 @@ class Category:
     def getTitleStr(self):
         sdb = {}
         
-        sdb["name"] = self.name
+        sdb["name"] = self.screen_name
         sdb["tag"] = str(self.tag)
         
         strf = "{name} ({tag})".format(**sdb)

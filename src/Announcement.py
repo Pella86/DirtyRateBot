@@ -70,7 +70,6 @@ class Announcement:
             f.write(str(tnow.timestamp())+"\n")
     
     def getStartTimer(self):
-        
         timestamp = None
         with open(self.star_timer_file, "r") as f:
             line = f.readline()
@@ -78,8 +77,6 @@ class Announcement:
             timestamp = float(line)
         
         return datetime.datetime.fromtimestamp(timestamp)
-                
-        
     
     def announce_text(self, user, text):
         text = text if len(text) > 10 else "{0: >10}".format(text)
@@ -90,9 +87,7 @@ class Announcement:
         # write a file containing the id of the users
         with open(self.successfile, 'a') as f:
             f.write(str(user.id) + '\n')
-        return
-        
-        
+        return    
     
     def announce_all_users(self, text):
         # the api limit is 30 in a second
@@ -255,7 +250,7 @@ class Announcement:
             print("start thread")
             t = threading.Thread(target=self.announce_daily)
             t.start()
-            time.sleep(300)
+            time.sleep(2*60*60)
             
   
     

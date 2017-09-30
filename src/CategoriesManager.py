@@ -83,7 +83,7 @@ class Categories:
         self.getuploadCategory = {}
 
     def sendMainMenu(self, chatid, user):
-        # create the main menu
+        ''' The function shows the user the main menu of the bot'''
 
         m = "<b> prot --- Main Menu --- prot </b>\n"
         m += "<i>Choose a category to see or vote the pictures, media, belonging to it</i>\n"
@@ -92,13 +92,16 @@ class Categories:
         m += "START HERE!!\n"
         m += "/categories\n"
         m += "\n"
-        m += "<b>--- Top media ---</b>\n"
+        m += "<b>--- Top users and media ---</b>\n"
+        m += "<i>The top chart of media and users by category</i>\n"
         m += "/top_media\n"
         m += "\n"
         m += "<b>--- Profile ---</b>\n"
+        m += "<i>Your profile containing the information about points </i>\n"
         m += "/profile\n"
         m += "\n"
-        m += "<b>--- Upload your content ---</b>\n"
+        m += "<b>--- Upload ---</b>\n"
+        m += "<i>Upload your media to the bot</i>\n"
         m += "/upload\n"
         m += "\n"
         m += "<b>--- HELP ---</b>\n"
@@ -110,14 +113,22 @@ class Categories:
         self.bot.sendMessage(chatid, m, parse_mode = "HTML")
     
     def categoryPrice(self, user):
-        return (500 + int(user.getReputation() / 1000))
+        ''' The price to create a category'''
+        #return (500 + int(user.getReputation() / 1000))
+        return (10 + int(user.getReputation() / 1000))
                 
     def addCategory(self, chatid, user):
-        # chatid must be private, checked in the handle
+        ''' This function is called when a user wants to create a category
+        chatid must be private and is checked in the handle function
+        user is te requesting user
+        '''
+        
+        # first send the available categories
         self.sendSelectCategoryMenu(chatid, sort=True)
-
+        
+        # create the message to purchase a category
         sdb = {}
-        sdb["price"] = em.Pstr(self.categoryPrice(), True)
+        sdb["price"] = em.Pstr(self.categoryPrice(user), True)
         sdb["points"] = user.getPointsStr(True)
 
         m = "Send a category name\n"
@@ -134,48 +145,51 @@ class Categories:
         self.bot.sendMessage(chatid, m, parse_mode="HTML")
         self.new_cat_req[chatid] = (True, False)
 
-    def getCategoryName(self, msg):
-        chatid = msg.chat.id
-        user = self.user_profile_db.getData(msg.mfrom.id).getData()
+    def getCategoryName(self, chatid, user, content):
+        ''' this function gets the name from the chat once the user wants to 
+        add a category
+        '''
+        
+        # check if the user requested a "add category"        
         if self.new_cat_req[chatid][0]:
-            if (msg.content is not None and
-                msg.content.type == "text" and not
-                msg.content.text.startswith("/")
+            if (content is not None 
+                and content.type == "text" 
+                and not content.text.startswith("/")
                 ):
 
                 # check validity of category name
                 # a category must be max 15 character long
-                categoryname = msg.content.text
+                categoryname = content.text
 
                 is_valid_name = True
                 if len(categoryname) > 15:
                     is_valid_name = False
 
                 validcharset = string.ascii_lowercase + string.ascii_uppercase + string.digits
-
-                if is_valid_name:
-                    for c in categoryname:
-                        if c not in validcharset:
-                            is_valid_name = False
-                            break
-                        
-                if is_valid_name:
-                    if categoryname.lower() in map(list(self.categories_db.keys()), str.lower()) and categoryname.lower() != "top":
+                
+                for c in categoryname:
+                    if c not in validcharset:
                         is_valid_name = False
+                        break
+
+                if (is_valid_name
+                    and categoryname.lower() in map(lambda s : s.lower(), list(self.categories_db.keys()))
+                    and categoryname.lower() != "top"
+                    ):
+                    is_valid_name = False
                 
                 # if the name is valid
                 # create a message where the buttons displays the possible tags
                 if is_valid_name:
                     # create message
-
-                    price = self.categoryPrice()
+                    price = self.categoryPrice(user)
 
                     sdb = {}
                     sdb["catname"] = categoryname
                     sdb["price"] = em.Pstr(price, long=True)
                     m = "Select a tag for the category\n"
                     m += "<i>Your category will be banned if you have for example porn in a safe for work (SFW-tag category</i>\nThis action will cost you {price}\n\n"
-                    m += "category: {catname}"
+                    m += "category: {catname}\n\n/main_menu"
 
                     m = _(m, user.lang_tag)
 
@@ -202,20 +216,37 @@ class Categories:
 
                     self.new_cat_req[chatid] = (True, True)
 
-
                 else:
-                    self.bot.sendMessage(chatid,_("Name not valid (either character or category already present) /add_category again", user.lang_tag))
+                    self.bot.sendMessage(chatid,_("Name not valid (either character or category already present) /add_category again or /main_menu", user.lang_tag))
                     self.new_cat_req[chatid] = (False, False)
             else:
-                self.bot.sendMessage(chatid, _("Operation aborted (must be text and not a command) /add_category again", user.lang_tag))
+                self.bot.sendMessage(chatid, _("Operation aborted (must be text and not a command) /add_category again or /main_menu", user.lang_tag))
                 self.new_cat_req[chatid] = (False, False)
 
+    def sendMaxUploadMessage(self, chatid, user):
+        ''' This function governs the max upload reached message'''
+        #Calculate the time difference
+        dtime = datetime.timedelta(days = 1) - (datetime.datetime.now() - user.firstuploadtime)
 
+        minutes, seconds = divmod(dtime.seconds, 60)
+        hours, minutes = divmod(minutes, 60)
 
-    def upload(self, msg):
-        chatid = msg.chat.id
-        person = msg.mfrom
-        user = self.user_profile_db.getData(person.id).getData()
+        cost = int(40 + user.getReputation()/1000)
+        
+        button_buyups = InlineKeyboardButton(
+                text='buy 5 uploads for' + str(em.Pstr(cost)),
+            callback_data='buy_uploads_' + str(cost)
+            )
+        
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[[button_buyups],])
+        
+        rmk = keyboard
+
+        self.bot.sendMessage(chatid, "Max upload reached! Missing {0}h and {1}m\nYou currently have {2}".format(hours, minutes, user.getPointsStr(True)), reply_markup = rmk)
+        print("max upload reached")
+
+    def upload(self, chatid, user):
+        '''This function is called when a person calls the command /upload'''
 
         if user.canUpload():
             self.getupload[chatid] = True
@@ -226,33 +257,18 @@ class Categories:
             self.getuploadMedia[chatid] = False
             self.getuploadCategory[chatid] = False
 
-            dtime = datetime.timedelta(days = 1) - (datetime.datetime.now() - user.firstuploadtime)
-            print(dtime, "\n")
+            self.sendMaxUploadMessage(chatid, user)
 
-            minutes, seconds = divmod(dtime.seconds, 60)
-            hours, minutes = divmod(minutes, 60)
-
-            cost = int(40 + user.getReputation()/1000)
-            button_buyups = InlineKeyboardButton(
-
-            text='buy 5 uploads for' + str(em.Pstr(cost)),
-            callback_data='buy_uploads_' + str(cost)
-            )
-            keyboard = InlineKeyboardMarkup(
-            inline_keyboard=[[button_buyups],]
-            )
-            rmk = keyboard
-
-            self.bot.sendMessage(chatid, "Max upload reached! Missing {0}h and {1}m\nYou currently have {2}".format(hours, minutes, user.getPointsStr()), reply_markup = rmk)
-            print("max upload reached")
-
-    def sendUploadMedia(self, msg):
-        chatid = msg.chat.id
         if self.getupload[chatid] == True:
            self.bot.sendMessage(chatid, "Send a media (picture, gif, video, ...)")
            self.getuploadMedia[chatid] = True
 
     def getUploadMedia(self, msg):
+        ''' get the media when the user posts the message ater uploading
+        The next step will determine the category and the media and the 
+        category will be checked
+        '''
+        
         chatid = msg.chat.id
         if self.getupload[chatid] and self.getuploadMedia[chatid] == True:
             if msg.content is not None:
@@ -290,7 +306,11 @@ class Categories:
         return catnamelist 
 
     def sendSelectCategoryMenu(self, chatid, ipage = None, sort = False, menu = False, topmedia=False, user = None):
-
+        ''' This function is sent when a person need to select from different 
+        categories, different formats are given, like if it is for a menu or a
+        top media menu.
+        '''
+        
         catlist = self.getCategoriesList()
 
         if sort:
@@ -305,63 +325,20 @@ class Categories:
         else:
             querytag = "cmps"
             maxcatperpage = 5
-
-        cll = len(catlist)
-        maxpage = math.ceil(cll / maxcatperpage)
-
-        page = 1 if ipage is None else ipage
-
-        # set min value 1
-        page = 1 if page < 1 else page
-
-        # set max value to be max page
-        page = maxpage if page >= maxpage else page
-
-        # slice the category list
-        offsetmin = (page - 1) * maxcatperpage
-        offsetmax = page * maxcatperpage
-
-        catinpage = catlist[offsetmin:offsetmax]
+            
+        catinpage, page, maxpage = self.sliceListForPage(catlist, ipage, maxcatperpage)
 
         # build the string
-        m = "- Categories -\n"
+        m = "<b>- Categories -</b>\n\n"
         for cat in catinpage:
             if menu:
                 m += self.getCategoryPage(cat, user)
             elif topmedia:
                 m += self.getTopMediaPage(cat, user)
             else:
-                m += "- <b>{0}</b> ({1})\nScore: {2}\n".format(cat.name, cat.tag.name, cat.score)
+                m += "- <b>{0}</b> ({1})\nScore: {2}\n\n".format(cat.name, cat.tag.name, cat.score)
 
-        m += "Page: {0}/{1} | /main_menu".format(page, maxpage)
-
-        # create keyboard
-        prevpage = 1
-        if page > 1:
-            prevpage = page - 1
-        cbprevpage = querytag + "_" + str(prevpage)
-        bprev = InlineKeyboardButton(
-                text = "< previous",
-                callback_data=cbprevpage
-                )
-
-        nextpage = maxpage
-        if page < maxpage:
-            nextpage = page + 1
-        cbnextpage = querytag + "_" + str(nextpage)
-
-        bnext = InlineKeyboardButton(
-                text = "next >",
-                callback_data=cbnextpage
-                )
-
-        rmk = InlineKeyboardMarkup(inline_keyboard=[[bprev,bnext],])
-
-
-        if ipage is None:
-            self.bot.sendMessage(chatid, m, parse_mode = "HTML", reply_markup = rmk)
-        else:
-            self.bot.editMessageText(chatid, m, parse_mode = "HTML", reply_markup = rmk)
+        self.sendPage(chatid, maxpage, maxcatperpage, m, page, ipage, querytag)
 
 
     def sendUploadCategory(self, msg):
@@ -402,7 +379,7 @@ class Categories:
                 catnamelist = self.getCategoriesNamesList()
                 if usercatname in catnamelist:
                     # get the user
-                    user.tmp_content["cateogry"] = usercatname
+                    user.tmp_content["cateogry"] = usercatname.lower()
                     # preventively
                     # change this might create error
                     print("try to create media")
@@ -546,8 +523,6 @@ class Categories:
             msg += "\n"
 
         self.bot.sendMessage(chatid, msg, parse_mode="HTML")
-
-
 
     def pickMedia(self, medialist):
         usermedia = []
@@ -712,12 +687,10 @@ class Categories:
         else:
             self.bot.sendMessage(chatid, "ShowTop: Category not found")
             
-    def sliceListForPage(self, the_list, ipage, max_elements_per_page, l=0):
-        if l > 0:
-            cll = l
-        else:
-            cll = len(the_list)
-            
+    def sliceListForPage(self, the_list, ipage, max_elements_per_page):
+        ''' This function prepares a list to be displayed to in pages'''
+        
+        cll = len(the_list)
         maxpage = math.ceil(cll / max_elements_per_page)
         
         # set minimal value
@@ -732,7 +705,7 @@ class Categories:
 
         rlist = the_list[offsetmin:offsetmax]
 
-        return rlist, page, maxpage     
+        return rlist, page, maxpage
     
         
     
@@ -947,14 +920,7 @@ class Categories:
         the subsequent in a table format
         '''
         
-        print("sendUserTop debug mode")
-        print("requser", requser)
-
-        #userlist = self.generateUserList(sort=["reputation", "karma"], excluded_ids=[creator_id])
         userlist = self.generateUserList(sort=["reputation", "karma"], excluded_ids=[creator_id])
-        
-        print("Len user list", len(userlist))
-        
         
         maxperpage = 10
         ulistpage, page, maxpage = self.sliceListForPage(userlist, ipage, maxperpage)
@@ -972,6 +938,7 @@ class Categories:
         is_user_in_page = False
         fillcharposition = "0"
         for user in ulistpage:
+            print(user)
             # prepare the variables to be printed such position and reputation
             sdb = {}
             sdb["position"] = position
