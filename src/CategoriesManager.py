@@ -712,8 +712,12 @@ class Categories:
         else:
             self.bot.sendMessage(chatid, "ShowTop: Category not found")
             
-    def sliceListForPage(self, the_list, ipage, max_elements_per_page):
-        cll = len(the_list)
+    def sliceListForPage(self, the_list, ipage, max_elements_per_page, l=0):
+        if l > 0:
+            cll = l
+        else:
+            cll = len(the_list)
+            
         maxpage = math.ceil(cll / max_elements_per_page)
         
         # set minimal value
@@ -937,37 +941,34 @@ class Categories:
             
 
 
-    def sendUserTop(self,chatid, requser, ipage=None):
+    def sendUserTop(self, chatid, requser, ipage=None):
         '''' This function sends the users topcharts 
         The first 5 users are represented in a nice page
         the subsequent in a table format
         '''
+        
+        print("sendUserTop debug mode")
+        print("requser", requser)
 
         #userlist = self.generateUserList(sort=["reputation", "karma"], excluded_ids=[creator_id])
-        userlist = self.generateUserList(sort=["reputation", "karma"], excluded_ids=[])
+        userlist = self.generateUserList(sort=["reputation", "karma"], excluded_ids=[creator_id])
+        
+        print("Len user list", len(userlist))
+        
+        
+        maxperpage = 10
+        ulistpage, page, maxpage = self.sliceListForPage(userlist, ipage, maxperpage)
         
         if ipage == None or ipage == 1:
-            maxperpage = 5
-            topstr = "Top 5"
-        else:
-            maxperpage = 15
-            ipos = 5 + (ipage - 2) * maxperpage + 1
-            topstr = "Form {} to {}".format(ipos, ipos + maxperpage)            
-            
-        # message title
-        # From x to y User Chart
-        s = '<b>--- {} User Chart ---</b>\n'.format(topstr)
-        s += "\n"
-
-        # generate the sliced list
-        ulistpage, page, maxpage = self.sliceListForPage(userlist, ipage, maxperpage)
-
-        # prepare the display of the chart 
-        if page == 1:
+            s = '<b>---{0} Top Ten User Chart {0}---</b>\n'.format(em.trophy)
             position = 1
         else:
-            position = 5 + (page-2) * maxperpage + 1
+            position =(page-1) * maxperpage + 1
+            s = '<b>--- Form {} to {} User Chart ---</b>\n'.format(position, position + maxperpage)   
+            
+        s += "\n"
 
+        # prepare the display of the chart 
         is_user_in_page = False
         fillcharposition = "0"
         for user in ulistpage:
@@ -987,7 +988,7 @@ class Categories:
                 sdb["you"] = "" 
             
             if page == 1:
-                s += "<b>{position}. {anonid}{you}</b>\n<code> reputation: {reputation}\n karma: {karma}</code> \n\n".format(**sdb)
+                s += "{position}. <b>{anonid}{you}</b>\n<code> R:{reputation}  K:{karma}</code> \n".format(**sdb)
             else:
                 # prepare the spaces for the numbers
                 fillcharposition = len(str(position + maxperpage))

@@ -128,6 +128,8 @@ rem_categories_request_msg = "Pick categories to remove from the group, comma se
 
 # all time top
 
+# help for supergroups
+
 # expand keyboard to navigate pages (>1 >10 >100 ...)
 
 # rename rep points in shield points and points in coins

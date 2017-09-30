@@ -82,7 +82,8 @@ class Announcement:
         
     
     def announce_text(self, user, text):
-        print("Sending (", text, ")to", user.anonid)        
+        text = text if len(text) > 10 else "{0: >10}".format(text)
+        print("Sending (", text[0:10], ")to", user.anonid)        
         user.sendNotification("main-announcement", text, self.bot, self.chatsdb)
         self.success[user.id] = True
         
