@@ -73,9 +73,16 @@ class Database:
     
     def getDataList(self):
         dlist = []
-        for element in self.database.values():
-            dlist.append(element.getData())
+        for delement in self.database.values():
+            element = delement.getData()
+            dlist.append(element)
         return dlist
+
+    def getDataGen(self):
+        for delement in self.database.values():
+            element = delement.getData()
+            yield element
+        
     
     def getData(self, dataid):
         return self.database[dataid]

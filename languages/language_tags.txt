@@ -1,0 +1,11 @@
+
+en-GB
+en
+en-EN
+
+it-IT
+it-CH
+en-US
+es
+it
+ar-AE

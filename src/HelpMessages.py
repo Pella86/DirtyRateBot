@@ -134,6 +134,7 @@ def help_msg_supergroups(lang_tag):
     help_msg += "/reset_all: sets only the default categories.\n"
     help_msg += "/set_porngore: allows the porn and gore categories to be shown.\n"
     help_msg += "/set_kinky: adds the porn categories but not the gore categories, to the shown list.\n"
+    help_msg += "/list_categories: shows the active categories in this group\n"
 
     help_msg = _(help_msg, lang_tag)
     

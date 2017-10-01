@@ -105,8 +105,6 @@ class Announcement:
         if apilimit <= tele_api_limit:
             apilimit = tele_api_limit
         
-        apilimit = 1
-        
         secs = 0
         usercount = 0
         
@@ -133,7 +131,7 @@ class Announcement:
         
         self.catdb.user_profile_db.updateDb()
     
-    def daily_announcement_text(self, user, last):
+    def daily_announcement_text(self, user, last, day_cat, day_media):
         # The daily announcment should bring 
         # position 
         # added categories from last visit
@@ -148,19 +146,51 @@ class Announcement:
             if position >= len(userlist):
                 break
             ouser = userlist[position]
+            
+        
 
         sdb = {}
         sdb["position"] = position
         
-        text = "<b>---- Daily Summary ----\n</b>"
-        text += "You are in position {position}"
+        text = "<b>---- Daily Summary ----</b>\n"
+        text += "You are in position {position}\n"
+
+        text += "\n"
         
+        text += "---- New categories today ----\n"
+
+        if day_cat:
+            for cat in day_cat:
+                text += cat.getTitleStr() + "\n /vote_{}\n".format(cat.name)
+        else:
+            text += "No new categories\n"
+        
+        text += "\n"
+        
+        text += "--- New media today ----\n"
+        
+        if day_media:
+            
+            cat_media = {}
+            
+            for media in day_media:
+                if media.catname in cat_media:
+                    cat_media[media.catname] += 1
+                else:
+                    cat_media[media.catname] = 1
+            
+            for catname, nmedia in cat_media.items():
+                text += "{catname} has {nmedia} new media\n/vote_{catname}\n".format(catname=catname, nmedia=nmedia)
+            
+        else:
+            text += "No new media\n"
+
         text = text.format(**sdb)
-        
-        print("send message to user", user.id)
+
+        print("send daily message to user", user.id)
         user.sendNotification("daily-announcement", text, self.bot, self.chatsdb)
         
-        with open(self.success_daily_file, 'w') as f:
+        with open(self.success_daily_file, 'a') as f:
             f.write(str(user.id) + "\n")
         
         
@@ -176,22 +206,26 @@ class Announcement:
                 f.write("success\n")
         return
         
-    def announce_daily(self):
+    def announce_daily(self, catManager):
+        print("Daily routine work")
+        catManager.maintenence()
+        
         print("Try sending announcement", datetime.datetime.now())
         nowtime = datetime.datetime.now()
         timedelta = datetime.timedelta(days=1)
 
         timediff = nowtime - self.getStartTimer()
         
-        print("is it time", timediff, timedelta)
-        
-        
         is_day_passed = (timediff > timedelta)
+        
+        print("is it time", is_day_passed)
         
         if is_day_passed:
             # delete the done file
             if os.path.isfile(self.daily_announcement_done):
                 os.remove(self.daily_announcement_done)
+            
+            
         
         is_done = os.path.isfile(self.daily_announcement_done)
         is_pending = os.path.isfile(self.success_daily_file)
@@ -216,6 +250,17 @@ class Announcement:
             secs = 0
             usercount = 0
             
+            # gather the newly added categories and media
+            day_media = []
+            for media in catManager.media_vote_db.getDataList():
+                if nowtime - media.creation_date < datetime.timedelta(days=1):
+                    day_media.append(media)
+            
+            day_cat = []
+            for category in catManager.categories_db.getDataList():
+                if nowtime - category.creation_date < datetime.timedelta(days=1):
+                    day_cat.append(category)
+            
             for duser in userlist:
                 user = duser.getData()
                 if user.id not in self.success_daily:
@@ -226,9 +271,11 @@ class Announcement:
                     last = False
                     if user.id == userlist[-1].getData().id:
                         last = True
+                        
+                    
                     
                     print("is last", last)
-                    t = threading.Timer(secs, self.daily_announcement_text, args=(user, last))
+                    t = threading.Timer(secs, self.daily_announcement_text, args=(user, last, day_cat, day_media))
                 
                     t.start()
                     
@@ -245,10 +292,10 @@ class Announcement:
             self.writeStartTimer()
         return
     
-    def run_daily(self):
+    def run_daily(self, catManager):
         while 1:
             print("start thread")
-            t = threading.Thread(target=self.announce_daily)
+            t = threading.Thread(target=self.announce_daily, args=(catManager,))
             t.start()
             time.sleep(2*60*60)
             

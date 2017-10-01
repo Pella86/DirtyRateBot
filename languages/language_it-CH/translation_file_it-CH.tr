@@ -1,0 +1,47 @@
+
+-----English String:
+<b> prot --- Main Menu --- prot </b>
+<i>Choose a category to see or vote the pictures, media, belonging to it</i>
+
+<b>--- Category ---</b>
+START HERE!!
+/categories
+
+<b>--- Top users and media ---</b>
+<i>The top chart of media and users by category</i>
+/top_media
+
+<b>--- Profile ---</b>
+<i>Your profile containing the information about points </i>
+/profile
+
+<b>--- Upload ---</b>
+<i>Upload your media to the bot</i>
+/upload
+
+<b>--- HELP ---</b>
+/help
+
+
+
+Translated String:
+
+
+-----English String:
+No media in this category
+
+Translated String:
+
+
+-----English String:
+mute notification 
+
+Translated String:
+
+
+-----English String:
+You voted all the pictures in this category use
+
+Translated String:
+
+

@@ -1,0 +1,206 @@
+
+-----English String:
+mute notification 
+
+Translated String:
+
+
+-----English String:
+<b>- {anon_emoji} User Profile {user_face} {space_shuttle}-</b>
+<i>Your anonymous id is: {anonid}</i>
+Change nickname: /set_nickname
+
+<b>- Current Status -</b>
+Points: {points} | /help_points
+Karma: {karma} | /help_karma
+Reputation points: {rep_points}
+Reputation: {reputation}
+/help_reputation
+<i>To increase your reputation use</i>
+/buy_reputation
+
+<b>- My Uploads -</b>
+You uploaded a total of {nup} media
+Today you uploaded {dup} media
+To see your uploaded media press
+/my_uploads
+
+<b>- Create a category -</b>
+/add_category
+
+<b>--- Users top chart ---</b>
+/user_top
+
+/main_menu
+
+Translated String:
+
+
+-----English String:
+<b> prot --- Main Menu --- prot </b>
+<i>Choose a category to see or vote the pictures, media, belonging to it</i>
+
+<b>--- Category ---</b>
+START HERE!!
+/categories
+
+<b>--- Top users and media ---</b>
+<i>The top chart of media and users by category</i>
+/top_media
+
+<b>--- Profile ---</b>
+<i>Your profile containing the information about points </i>
+/profile
+
+<b>--- Upload ---</b>
+<i>Upload your media to the bot</i>
+/upload
+
+<b>--- HELP ---</b>
+/help
+
+
+
+Translated String:
+
+
+-----English String:
+<b>- Points {pemoji} -</b>
+You earn +{1 point} when you vote and +{5 points} when you /upload.
+When somebody upvotes your content you earn +{1 point} but you lose -{1 point} if somebody downvotes.
+Points are used to increase your reputation {remoji} (/buy_reputation), which increases the visibility of your media.
+
+
+Translated String:
+
+
+-----English String:
+You voted all the pictures in this category use
+
+Translated String:
+
+
+-----English String:
+No media in this category
+
+Translated String:
+
+
+-----English String:
+The media will be uploaded underthe category you chose:
+Send category name:
+
+Translated String:
+
+
+-----English String:
+Content uploaded successfully
+
+Translated String:
+
+
+-----English String:
+<b>--- Buy reputation ---</b>
+<i>Higher reputation ensures your media will be shown first, namely more reputation,  more points</i>
+
+You currently have {rep_points}
+You a karma of {karma}
+This generates a reputation of {rep}
+Reputation formula:
+ <code>karma * reputation points</code>
+
+You have {points} points
+Vould you like to buy more RP?
+
+
+Translated String:
+
+
+-----English String:
+Buy {qrp} for {points}
+
+Translated String:
+
+
+-----English String:
+Calculate media probability (not working)
+
+Translated String:
+
+
+-----English String:
+User {user} upoaded the picture
+Category: {category}
+Category tag: {tag}
+Media score: {score}
+
+
+Translated String:
+
+
+-----English String:
+<b>- Help supergroup -</b>
+The users can call /vote and the bot will pick media from a set of selected categories.
+If you are one of the admin or the creator of the supergroup, you can decide what categories will be shown.
+By default the bot will show the safe for work (SFW) categories: meme, nature, space
+Admin can use a series of commands to set new categories or remove them.
+List of admin commands: (use them in group)
+/set_all: sets all the categories
+/rem_all: mutes all the categories
+/set_categories: the admin can select a number of categories comma separated.
+/rem_categories: select which categories to remove.
+/reset_all: sets only the default categories.
+/set_porngore: allows the porn and gore categories to be shown.
+/set_kinky: adds the porn categories but not the gore categories, to the shown list.
+
+
+Translated String:
+
+
+-----English String:
+<b>- Reputation {remoji} -</b>
+The reputation is shown near your username (or anonymous id {anonem}).
+The reputation is calculated by your reputation points (/buy_reputation) times your karma {kemoji} (if karma is positve).
+
+The reputation determines the media's visibility.
+When a person wants to vote, the media are orderd by reputation of the user.
+
+- How do I increase my reputation?
+use the command /buy_reputation
+
+Translated String:
+
+
+-----English String:
+Please send your nickname, the nickname must be minumum 3 characters and maximum 15, it can contain only alphanumeric characters (a-z, A-Z, 0-9)
+
+Translated String:
+
+
+-----English String:
+Nickname changed successfully
+ /main_menu
+
+Translated String:
+
+
+-----English String:
+<b>- Help supergroup -</b>
+The users can call /vote and the bot will pick media from a set of selected categories.
+If you are one of the admin or the creator of the supergroup, you can decide what categories will be shown.
+By default the bot will show the safe for work (SFW) categories: meme, nature, space
+Admin can use a series of commands to set new categories or remove them.
+List of admin commands: (use them in group)
+/set_all: sets all the categories
+/rem_all: mutes all the categories
+/set_categories: the admin can select a number of categories comma separated.
+/rem_categories: select which categories to remove.
+/reset_all: sets only the default categories.
+/set_porngore: allows the porn and gore categories to be shown.
+/set_kinky: adds the porn categories but not the gore categories, to the shown list.
+/list_categories: shows the active categories in this group
+
+
+Translated String:
+
+

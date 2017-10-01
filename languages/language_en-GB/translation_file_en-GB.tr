@@ -1,0 +1,271 @@
+-----English String:
+<b> prot --- Main Menu --- prot </b>
+<i>Choose a category to see or vote the pictures, media, belonging to it</i>
+
+<b>--- Category ---</b>
+START HERE!!
+/categories
+
+<b>--- Top users and media ---</b>
+<i>The top chart of media and users by category</i>
+/top_media
+
+<b>--- Profile ---</b>
+<i>Your profile containing the information about points </i>
+/profile
+
+<b>--- Upload ---</b>
+<i>Upload your media to the bot</i>
+/upload
+
+<b>--- HELP ---</b>
+/help
+
+
+
+Translated String:
+
+
+
+
+
+-----English String:
+mute notification 
+
+Translated String:
+
+
+
+
+
+-----English String:
+You voted all the pictures in this category use
+
+Translated String:
+
+
+
+
+
+-----English String:
+<b> prot --- Main Menu --- prot </b>
+<i>Choose a category to see or vote the pictures, media, belonging to it</i>
+
+<b>--- Category ---</b>
+START HERE!!
+/categories
+
+<b>--- Top users and media ---</b>
+<i>The top chart of media and users by category</i>
+/top_media
+
+<b>--- Profile ---</b>
+<i>Your profile containing the information about points </i>
+/profile
+
+<b>--- Upload ---</b>
+<i>Upload your media to the bot</i>
+/upload
+
+<b>--- HELP ---</b>
+/help
+
+
+
+Translated String:
+
+
+
+
+
+-----English String:
+@DirtyRateBot version: {version}
+<i>This bot allows you to upload and rate media with the rest of the bot community.
+The media are divided into categories.</i>
+
+<b>- Rating pictures -</b>
+To rate the media use /categories
+To see the top three media use the /show_top
+
+<b>- Uploading pictures -</b>
+To upload your media see /help_upload.
+
+<b>- Profile -</b>
+You can check your uploads under /profile then /my_uploads.
+You will have a profile with points {pem}, karma {kem} and reputation {rem}.
+See /help_points, /help_karma, /help_reputation
+
+<b>- Super Groups -</b>
+You can use the bot in super group, add it and press the command /vote.
+If you are the admin you can set the categories you want to show /help_supergroups.
+
+Translated String:
+
+
+
+-----English String:
+<b>- Upload media -
+</b>Use the command /upload to upload media to the bot.
+The bot will ask for a media (can be a picture, gif, video or document)
+The bot will ask for a category
+If the bot says success, you made it
+
+Translated String:
+
+
+
+-----English String:
+<b>- {anon_emoji} User Profile {user_face} {space_shuttle}-</b>
+<i>Your anonymous id is: {anonid}</i>
+Change nickname: /set_nickname
+
+<b>- Current Status -</b>
+Points: {points} | /help_points
+Karma: {karma} | /help_karma
+Reputation points: {rep_points}
+Reputation: {reputation}
+/help_reputation
+<i>To increase your reputation use</i>
+/buy_reputation
+
+<b>- My Uploads -</b>
+You uploaded a total of {nup} media
+Today you uploaded {dup} media
+To see your uploaded media press
+/my_uploads
+
+<b>- Create a category -</b>
+/add_category
+
+<b>--- Users top chart ---</b>
+/user_top
+
+/main_menu
+
+Translated String:
+
+
+
+
+-----English String:
+<b>- Points {pemoji} -</b>
+You earn +{1 point} when you vote and +{5 points} when you /upload.
+When somebody upvotes your content you earn +{1 point} but you lose -{1 point} if somebody downvotes.
+Points are used to increase your reputation {remoji} (/buy_reputation), which increases the visibility of your media.
+
+
+Translated String:
+
+
+
+
+-----English String:
+Send a category name
+<i>The name must be maximum 15 characters long and can contain only alphanumeric characters (a-z and A-Z and 1-10)</i>
+
+Create a category will cost {price} you have {points}
+/cancel
+
+
+Translated String:
+
+
+-----English String:
+Select a tag for the category
+<i>Your category will be banned if you have for example porn in a safe for work (SFW-tag category</i>
+This action will cost you {price}
+
+category: {catname}
+
+/main_menu
+
+Translated String:
+
+
+-----English String:
+Category successfully created
+/main_menu
+
+Translated String:
+
+
+-----English String:
+Category Created
+
+Translated String:
+
+
+-----English String:
+No media in this category
+
+Translated String:
+
+
+-----English String:
+The media will be uploaded underthe category you chose:
+Send category name:
+
+Translated String:
+
+
+-----English String:
+Content uploaded successfully
+
+Translated String:
+
+
+-----English String:
+Media already in database
+
+Translated String:
+
+
+-----English String:
+<b>--- Buy reputation ---</b>
+<i>Higher reputation ensures your media will be shown first, namely more reputation,  more points</i>
+
+You currently have {rep_points}
+You a karma of {karma}
+This generates a reputation of {rep}
+Reputation formula:
+ <code>karma * reputation points</code>
+
+You have {points} points
+Vould you like to buy more RP?
+
+
+Translated String:
+
+
+-----English String:
+Buy {qrp} for {points}
+
+Translated String:
+
+
+-----English String:
+Calculate media probability (not working)
+
+Translated String:
+
+
+-----English String:
+Please send your nickname, the nickname must be minumum 3 characters and maximum 15, it can contain only alphanumeric characters (a-z, A-Z, 0-9)
+
+Translated String:
+
+
+-----English String:
+This [{character}] symbol cannot be used in name
+ /main_menu
+
+Translated String:
+
+
+-----English String:
+Nickname changed successfully
+ /main_menu
+
+Translated String:
+
+

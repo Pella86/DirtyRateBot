@@ -107,3 +107,15 @@ class SuperGroup:
         if medialist:
             cmedia = random.choice(medialist)
             cmedia.showMediaVotePublic(self.id, catManager)
+    
+    def sendCategoryList(self, catManager):
+        
+        s = "--- Active categories in this group ---\n\n"
+        for category, flag in self.catsettings.items():
+            if flag:
+                cat = catManager.categories_db.getData(category).getData()
+                s += cat.screen_name + " - " + str(cat.tag) + "\n"
+        
+        catManager.bot.sendMessage(self.id, s)
+                
+        

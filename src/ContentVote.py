@@ -112,7 +112,9 @@ class ContentVote:
     def getScoreF(self):
         score = self.getScore()
         if score >= 1:
-            return "{0:.0f}".format(score)
+            return "{0}".format(em.suffix_numbers(int(score)))
+        elif abs(score) < 0.01:
+            return "0"
         else:
             return "{0:.2f}".format(score)
         
@@ -325,7 +327,7 @@ class ContentVote:
         
         cpt += "Category: " + cat_screen_name + "\n"
         
-        cpt += "Score: " + em.suffix_numbers(self.getScoreF()) + "\n"
+        cpt += "Score: " + self.getScoreF() + "\n"
         
         cpt += "/vote"
         

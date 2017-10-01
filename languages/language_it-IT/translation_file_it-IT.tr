@@ -1,0 +1,315 @@
+-----English String:
+mute notification 
+
+Translated String:
+slienzia notifiche
+
+
+-----English String:
+<b> prot --- Main Menu --- prot </b>
+<i>Choose a category to see or vote the pictures, media, belonging to it</i>
+
+<b>--- Category ---</b>
+START HERE!!
+/categories
+
+<b>--- Top users and media ---</b>
+<i>The top chart of media and users by category</i>
+/top_media
+
+<b>--- Profile ---</b>
+<i>Your profile containing the information about points </i>
+/profile
+
+<b>--- Upload ---</b>
+<i>Upload your media to the bot</i>
+/upload
+
+<b>--- HELP ---</b>
+/help
+
+
+
+Translated String:
+<b> prot --- Menu Principale --- prot </b>
+<i>Scegli una categoria per votare le immagini, gif e media che contiene</i>
+
+<b>--- Categorie ---</b>
+Comincia QUI!!!
+/categories
+
+<b>--- Classifica users e media ---</b>
+<i>La classifica degli users</i>
+/top_media
+
+<b>--- Profilo ---</b>
+<i>Il tuo profilo che contiene informazione su karma e punti</i>
+/profile
+
+<b>--- Carica ---</b>
+<i>Carica un media nel bot</i>
+/upload
+
+<b>--- HELP ---</b>
+/help
+
+
+
+-----English String:
+@DirtyRateBot version: {version}
+<i>This bot allows you to upload and rate media with the rest of the bot community.
+The media are divided into categories.</i>
+
+<b>- Rating pictures -</b>
+To rate the media use /categories
+To see the top three media use the /show_top
+
+<b>- Uploading pictures -</b>
+To upload your media see /help_upload.
+
+<b>- Profile -</b>
+You can check your uploads under /profile then /my_uploads.
+You will have a profile with points {pem}, karma {kem} and reputation {rem}.
+See /help_points, /help_karma, /help_reputation
+
+<b>- Super Groups -</b>
+You can use the bot in super group, add it and press the command /vote.
+If you are the admin you can set the categories you want to show /help_supergroups.
+
+Translated String:
+@DirtyRateBot versione: {version}
+<i>Questo bot serve a caricare e votare media con il resto della comunità del bot</i>
+
+<b>- Votare immagini -</b>
+Per votare usa /categories
+Per vedere la classifica usa / show_top
+
+<b>- Caricare immaginii -</b>
+Per caricare un media fai riferimento al menu /help_upload.
+
+<b>- Profile -</b>
+Puoi controllare i tuoi caricamenti sotto /profile poi /my_uploads.
+Avrai un profilo con punti {pem}, karma {kem} e reputazione {rem}.
+vedi /help_points, /help_karma, /help_reputation
+
+<b>- Super Groups -</b>
+Puoi usare il  bot nei supegruppi con il comando /vote.
+
+Se sei un admin del gruppo puoi selezionare le categorie che vuoi, guarda per /help_supergroups per maggiori informazioni.
+
+
+
+-----English String:
+<b>- {anon_emoji} User Profile {user_face} {space_shuttle}-</b>
+<i>Your anonymous id is: {anonid}</i>
+Change nickname: /set_nickname
+
+<b>- Current Status -</b>
+Points: {points} | /help_points
+Karma: {karma} | /help_karma
+Reputation points: {rep_points}
+Reputation: {reputation}
+/help_reputation
+<i>To increase your reputation use</i>
+/buy_reputation
+
+<b>- My Uploads -</b>
+You uploaded a total of {nup} media
+Today you uploaded {dup} media
+To see your uploaded media press
+/my_uploads
+
+<b>- Create a category -</b>
+/add_category
+
+<b>--- Users top chart ---</b>
+/user_top
+
+/main_menu
+
+Translated String:
+<b>- {anon_emoji} Profilo utente {user_face} {space_shuttle}-</b>
+<i>Il tuo ID anonimo è: {anonid}</i>
+Cambia nickname: /set_nickname
+
+<b>- Stato attuale -</b>
+Punti: {points} | /help_points
+Karma: {karma} | /help_karma
+Punti reputazioni: {rep_points}
+Reputazione: {reputation}
+/help_reputation
+<i>Per aumentare la reputazione usa</i>
+/buy_reputation
+
+<b>- Miei caricamenti-</b>
+Hai caricato un totale di {nup} media
+Oggi hai caricato {dup} media
+Per vedere cosa hai caricato usa
+/my_uploads
+
+<b>- Crea una categoria -</b>
+/add_category
+
+<b>--- Classifica users ---</b>
+/user_top
+
+/main_menu
+
+
+
+-----English String:
+<b>- Points {pemoji} -</b>
+You earn +{1 point} when you vote and +{5 points} when you /upload.
+When somebody upvotes your content you earn +{1 point} but you lose -{1 point} if somebody downvotes.
+Points are used to increase your reputation {remoji} (/buy_reputation), which increases the visibility of your media.
+
+
+Translated String:
+<b>- Punti {pemoji} -</b>
+Guadagni +{1 point} se voti mentre se carichi un media (/upload) guadagni +{5 points}.
+Quando qualcuno upvota i tuoi media tu guadagni +{1 point} ma ne perdi -{1 point} se qualcuno mette un downvote.
+I punti servono a aumentare la reputazione {remoji} (/buy_reputation), che aumenta la probabilità che i tuoi media vengano votati.
+
+
+
+-----English String:
+<b>- karma {kem} -</b>
+The karma is calculated by the number of upvotes {uem} minus the number of downvotes {dem} and multiplied by the number of people {anonem} who voted for your media.
+The karma influences the way the uploaded pictures are presented to the users.
+The more karma you have the better visibility will get your pictures.
+
+- How do I earn karma?
+Upload media to the bot by using the commnad /upload
+
+
+Translated String:
+<b>- karma {kem} -</b>
+Il karma viene calcolato per il numero di {uem} meno il numero di {dem} e moltiplicato per il numero di persone {anonem} che ha votato il media.
+Il karma influisce su come i media vengono presentati agli utenti.
+Più karma hai più i tuoi media verranno visti
+
+- Come guadagno karma?
+Carica media nel bot usando il comando /upload
+
+
+
+-----English String:
+You voted all the pictures in this category use
+
+Translated String:
+Hai votato tutte i media in questa categoria
+
+
+-----English String:
+The media will be uploaded underthe category you chose:
+Send category name:
+
+Translated String:
+I media verranno caricati sotto la categoria che sceglerai.
+Scegli il nome di una categoria:
+
+
+-----English String:
+Content uploaded successfully
+
+Translated String:
+Contenuto caricato con successo
+
+
+-----English String:
+No media in this category
+
+Translated String:
+Nessun media in questa categoria
+
+
+-----English String:
+Please send your nickname, the nickname must be minumum 3 characters and maximum 15, it can contain only alphanumeric characters (a-z, A-Z, 0-9)
+
+Translated String:
+Prego, invia il tuo nuovo nickname. Il nickname deve avere un minimo do 3 caratteri e un massimo di 15, può contenere solo caratteri alfanumerici (cioè a-z, A-Z, 0-9)
+
+
+-----English String:
+Nickname must be over 3 char and below 15 char
+
+Translated String:
+Il nickname deve essere più di 3 caratteri e meno di 15 caratteri
+
+
+-----English String:
+Nickname changed successfully
+ /main_menu
+
+Translated String:
+Il nickname è stato cambiato con successo
+/main_menu
+
+
+-----English String:
+<b>--- Buy reputation ---</b>
+<i>Higher reputation ensures your media will be shown first, namely more reputation,  more points</i>
+
+You currently have {rep_points}
+You a karma of {karma}
+This generates a reputation of {rep}
+Reputation formula:
+ <code>karma * reputation points</code>
+
+You have {points} points
+Vould you like to buy more RP?
+
+
+Translated String:
+
+
+-----English String:
+Buy {qrp} for {points}
+
+Translated String:
+
+
+-----English String:
+Calculate media probability (not working)
+
+Translated String:
+
+
+-----English String:
+Send a category name
+<i>The name must be maximum 15 characters long and can contain only alphanumeric characters (a-z and A-Z and 1-10)</i>
+
+Create a category will cost {price} you have {points}
+/cancel
+
+
+Translated String:
+
+
+-----English String:
+Operation aborted (must be text and not a command) /add_category again or /main_menu
+
+Translated String:
+
+
+-----English String:
+Category not found
+You can add the category using /add_category
+
+Translated String:
+
+
+-----English String:
+<b>- Reputation {remoji} -</b>
+The reputation is shown near your username (or anonymous id {anonem}).
+The reputation is calculated by your reputation points (/buy_reputation) times your karma {kemoji} (if karma is positve).
+
+The reputation determines the media's visibility.
+When a person wants to vote, the media are orderd by reputation of the user.
+
+- How do I increase my reputation?
+use the command /buy_reputation
+
+Translated String:
+
+

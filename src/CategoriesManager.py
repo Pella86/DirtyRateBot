@@ -114,8 +114,7 @@ class Categories:
     
     def categoryPrice(self, user):
         ''' The price to create a category'''
-        #return (500 + int(user.getReputation() / 1000))
-        return (10 + int(user.getReputation() / 1000))
+        return (500 + int(user.getReputation() / 1000))
                 
     def addCategory(self, chatid, user):
         ''' This function is called when a user wants to create a category
@@ -765,6 +764,7 @@ class Categories:
         if page < maxpage:
             nextpage = page + 1
         cbnextpage = querytag + "_" + str(nextpage) 
+        
         if args:
             for arg in args:
                 cbnextpage += "_" + str(arg)
@@ -849,14 +849,14 @@ class Categories:
         
             ulistpage, page, maxpage = self.sliceListForPage(userlist, ipage, maxperpage)
             
+            categories = [cat for cat in self.categories_db.getDataGen() if cat.name in catnames]
             
-            
+
             sdb = {}
             sdb["ipos"] = (page - 1) * maxpage + 1
             sdb["endpos"] = sdb["ipos"] + maxpage
-            sdb["catnames"] = "|".join(catnames)
-            
-            
+            sdb["catnames"] = "|".join(cat.screen_name for cat in categories)
+                        
             s = '<b>--- For the categories: {catnames} ---</b>\n'.format(**sdb)
             s += 'Form {ipos} to {endpos} User Chart\n'.format(**sdb)
             s += "\n"   
@@ -881,7 +881,7 @@ class Categories:
                 else:
                     sdb["you"] = "" 
                    
-                if  position ==  5 + (page-2) * maxperpage + 1:
+                if  position ==  (page-1) * maxperpage + 1:
                     fillcharposition = len(str(position + maxperpage))
  
                 sdb["fposition"] = "{position: <{0}}".format(fillcharposition, position=sdb["position"])
@@ -909,7 +909,9 @@ class Categories:
             tot_users = len(userlist)
             s += "<i>Users in this category: " + str(tot_users) + "</i>\n"
 
-            self.sendPage(chatid, maxpage, maxperpage, s, page, ipage, "cmputc")            
+            self.sendPage(chatid, maxpage, maxperpage, s, page, ipage, "cmputc") 
+        else:
+            self.bot.sendMessage(chatid, _("No media in this category", requser.lang_tag))
             
             
 
@@ -1063,3 +1065,26 @@ class Categories:
         else:
             user.tmp_nickname = ""
             return False
+
+    def maintenence(self):
+        # update the user and categories karma
+        
+        print("Updating karma...")
+        for user in self.user_profile_db.getDataList():
+            # get media list
+            medialist = user.getUploadedContent(self)
+            karma = user.calculateKarma(medialist)
+            user.karma = karma
+            
+            self.user_profile_db.setData(Data(user.id, user))
+            self.user_profile_db.updateDb()
+       
+        print("Updating categories db...")
+        for category in self.categories_db.getDataList():
+            category.calculateScore(self.media_vote_db)
+            
+            self.categories_db.setData(Data(category.name, category))
+            self.categories_db.updateDb()
+        
+        
+        print("Maintenence done.")

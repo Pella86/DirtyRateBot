@@ -139,8 +139,9 @@ class UserProfile:
         sdb['karma'] = self.getKarma()
         sdb['rep_pts'] = self.rep_points
         sdb['rep'] = self.getReputation()
+        sdb['langtag'] = self.lang_tag
 
-        s = "{anonid:_>15}: P{pts}/K{karma}/RP{rep_pts}/R{rep}|DUps{dup}".format(**sdb)
+        s = "{anonid:_>15}: P{pts}/K{karma}/RP{rep_pts}/R{rep}|DUps{dup}|{langtag}".format(**sdb)
         return s
 
     def getUploadedContent(self, categories):

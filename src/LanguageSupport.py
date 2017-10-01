@@ -14,6 +14,8 @@ Created on Wed Aug 16 17:56:25 2017
 from os.path import isfile
 import os
 
+encoding = "latin-1"
+
 class Translator:
     pass
     # the class will receive strings form the program
@@ -28,7 +30,7 @@ class Translator:
         # define a file where one stores the tags
         # it is in the folder /data/language_tags
         
-        self.lang_folder = "./data/languages/"
+        self.lang_folder = "./languages/"
         
         if not os.path.isdir(self.lang_folder):
             os.mkdir(self.lang_folder)
@@ -54,8 +56,11 @@ class Translator:
         #read the blocks
         for tag in self.tags:
             print("tag:", tag)
-            with open(self.getLangFileName(tag), "r") as f:
-                dlines = f.readlines()
+            dlines = []
+            with open(self.getLangFileName(tag), "rb") as f:
+                for line in f:
+                    dlines.append(line.decode(encoding))
+                    
             
             line = dlines.pop(0)
             while dlines:
@@ -90,7 +95,7 @@ class Translator:
         return self.lang_folder + "language_" + tag + "/"
     
     def getLangFileName(self, tag):
-        return self.getTagFolderName(tag) + "translation_file_" + tag + ".txt"
+        return self.getTagFolderName(tag) + "translation_file_" + tag + ".tr"
     
     def updateTags(self, tag):
         self.tags.append(tag)
@@ -101,16 +106,16 @@ class Translator:
         # open a folder with name "language_XX-XX"
         os.mkdir(self.getTagFolderName(tag))
         
-        with open(self.getLangFileName(tag), 'w') as f:
-            f.write("\n")
+        with open(self.getLangFileName(tag), 'wb') as f:
+            f.write("\n".encode(encoding))
         
     def addTranslationBlock(self, string, tag):
-        with open(self.getLangFileName(tag), "a") as f:
-            f.write("-----English String:\n")    
-            f.write(string)
+        with open(self.getLangFileName(tag), "ab") as f:
+            f.write("-----English String:\n".encode(encoding))    
+            f.write(string.encode(encoding))
             
-            f.write("\n\nTranslated String:\n")
-            f.write("\n\n")
+            f.write("\n\nTranslated String:\n".encode(encoding))
+            f.write("\n\n".encode(encoding))
 
 
 mytr = Translator()                

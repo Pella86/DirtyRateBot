@@ -38,7 +38,7 @@ def suffix_numbers(num):
         if magnitude >= 5:
             break
 
-    if onum <= 999:
+    if abs(onum) <= 999:
         return '{0}'.format(num)
     else:
         suffix_list = ('', 'K', 'M', 'G', 'T', 'P')
