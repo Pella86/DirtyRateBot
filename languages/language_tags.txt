@@ -9,3 +9,4 @@ en-US
 es
 it
 ar-AE
+en-IN

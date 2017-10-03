@@ -313,3 +313,88 @@ use the command /buy_reputation
 Translated String:
 
 
+-----English String:
+Please select one of the languages.
+
+If the bot remains in english, is because the language hasn't been translated yet.
+
+The flags should represent in which country the language is spoken, since I couldnt decide if to put the american flag or the british flag for english.
+
+Translated String:
+
+
+-----English String:
+Please select one of the languages.
+
+If the bot remains in english, is because the language hasn't been translated yet.
+
+The flags should represent in which country the language is spoken, since I couldnt decide if to put the american flag or the british flag for english.
+
+/main_menu
+
+Translated String:
+
+
+-----English String:
+<b>- Help supergroup -</b>
+The users can call /vote and the bot will pick media from a set of selected categories.
+If you are one of the admin or the creator of the supergroup, you can decide what categories will be shown.
+By default the bot will show the safe for work (SFW) categories: meme, nature, space
+Admin can use a series of commands to set new categories or remove them.
+List of admin commands: (use them in group)
+/set_all: sets all the categories
+/rem_all: mutes all the categories
+/set_categories: the admin can select a number of categories comma separated.
+/rem_categories: select which categories to remove.
+/reset_all: sets only the default categories.
+/set_porngore: allows the porn and gore categories to be shown.
+/set_kinky: adds the porn categories but not the gore categories, to the shown list.
+/list_categories: shows the active categories in this group
+
+
+Translated String:
+
+
+-----English String:
+<b>- Upload media -
+</b>Use the command /upload to upload media to the bot.
+The bot will ask for a media (can be a picture, gif, video or document)
+The bot will ask for a category
+If the bot says success, you made it
+
+Translated String:
+
+
+-----English String:
+<b>- {anon_emoji} User Profile {user_face} {space_shuttle}-</b>
+<i>Your anonymous id is: {anonid}</i>
+Change nickname: /set_nickname
+
+<b>- Current Status -</b>
+Points: {points} | /help_points
+Karma: {karma} | /help_karma
+Reputation points: {rep_points}
+Reputation: {reputation}
+/help_reputation
+<i>To increase your reputation use</i>
+/buy_reputation
+
+<b>- My Uploads -</b>
+You uploaded a total of {nup} media
+Today you uploaded {dup} media
+To see your uploaded media press
+/my_uploads
+
+<b>- Create a category -</b>
+/add_category
+
+<b>--- Users top chart ---</b>
+/user_top
+
+<b>--- Users top chart ---</b>
+/set_language
+/main_menu
+
+Translated String:
+
+

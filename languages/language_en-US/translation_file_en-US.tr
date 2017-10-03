@@ -129,3 +129,37 @@ Media score: {score}
 Translated String:
 
 
+-----English String:
+@DirtyRateBot version: {version}
+<i>This bot allows you to upload and rate media with the rest of the bot community.
+The media are divided into categories.</i>
+
+<b>- Rating pictures -</b>
+To rate the media use /categories
+To see the top three media use the /show_top
+
+<b>- Uploading pictures -</b>
+To upload your media see /help_upload.
+
+<b>- Profile -</b>
+You can check your uploads under /profile then /my_uploads.
+You will have a profile with points {pem}, karma {kem} and reputation {rem}.
+See /help_points, /help_karma, /help_reputation
+
+<b>- Super Groups -</b>
+You can use the bot in super group, add it and press the command /vote.
+If you are the admin you can set the categories you want to show /help_supergroups.
+
+Translated String:
+
+
+-----English String:
+Please select one of the languages.
+
+If the bot remains in english, is because the language hasn't been translated yet.
+
+The flags should represent in which country the language is spoken, since I couldnt decide if to put the american flag or the british flag for english.
+
+Translated String:
+
+

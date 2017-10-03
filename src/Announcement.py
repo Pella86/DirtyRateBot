@@ -101,7 +101,7 @@ class Announcement:
         
         # calculate the interval, if above below api limit the message will be
         # spread over more days
-        apilimit = 60 * 60 * 24 / totusers
+        apilimit = 60 * 60 * 20 / totusers
         if apilimit <= tele_api_limit:
             apilimit = tele_api_limit
         
@@ -241,12 +241,12 @@ class Announcement:
             
             # calculate the interval, if above below api limit the message will be
             # spread over more days
-            apilimit = 60 * 60 * 24 / totusers
+            apilimit = 60 * 60 * 20 / totusers
             if apilimit <= tele_api_limit:
                 apilimit = tele_api_limit
+                
             
-            apilimit = 1
-            
+
             secs = 0
             usercount = 0
             

@@ -235,6 +235,9 @@ class UserProfile:
         m += "<b>--- Users top chart ---</b>\n"
         m += "/user_top\n"
         m += "\n"
+        m += "<b>--- Users top chart ---</b>\n"
+        m += "/set_language\n"
+        m += "\n"
         m += "/main_menu"
         
         
@@ -330,9 +333,9 @@ class UserProfile:
             blist.append(button)
             qrp = (i+1)*2
             
-        button = [InlineKeyboardButton(text=_("Calculate media probability (not working)", self.lang_tag),
-                                       callback_data = "buy_calcp"),]
-        blist.append(button)
+#        button = [InlineKeyboardButton(text=_("Calculate media probability (not working)", self.lang_tag),
+#                                       callback_data = "buy_calcp"),]
+#        blist.append(button)
         rmk = InlineKeyboardMarkup(inline_keyboard = blist)
    
         if edit:

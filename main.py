@@ -37,6 +37,8 @@ from CategoriesManager import Categories
 from Announcement import Announcement
 from LanguageSupport import _
 
+from src.language_support.LanguageTag import get_language_flag
+
 import emoji_table as em
 import HelpMessages as Helpmsg
 import CategoryTags as tags
@@ -496,12 +498,27 @@ def handle(msg):
                     lang_tags = []
                     for line in lines:
                         tag = line.strip()
-                        lang_tags.append(tag)
+                        if tag:
+                            tag = tag[0:2]
+                            if tag not in lang_tags:
+                                lang_tags.append(tag)
                     
                     # create a table of buttons
+                    
+                    buttons = []
+                    for tag in lang_tags:
+                        
+                        bl_str = get_language_flag(tag)
+                            
+                        btag = InlineKeyboardButton(text=bl_str, callback_data="lns_" + tag)
+                        buttons.append(btag)
+                        
+                    buttons = [[b] for b in buttons]
+                    
+                    rmk = InlineKeyboardMarkup(inline_keyboard=buttons)
                         
                         
-                    bot.sendMessage(mymsg.chat.id, _("Please select one of the languages.\n If the bot remains in english, is because the language hasn't been translated yet"))
+                    bot.sendMessage(mymsg.chat.id, _("Please select one of the languages.\n\nIf the bot remains in english, is because the language hasn't been translated yet.\n\nThe flags should represent in which country the language is spoken, since I couldnt decide if to put the american flag or the british flag for english.\n\n/main_menu", user.lang_tag), reply_markup=rmk)
 
                 elif mymsg.content.text.startswith("/show_"):
                     lg.log("requested show")
@@ -1046,7 +1063,7 @@ def query(msg):
         if sendMenu:
             try:
                 categories.sendSelectCategoryMenu(cbkquery.getChatMsgID(), ipage=page, sort=True, menu=menu, topmedia=topmedia, user=user )
-                bot.answerCallbackQuery(query_id, text ="Page " + str(page))
+                
     
             except TelegramError as e:
                 if e.error_code == 400:
@@ -1056,6 +1073,7 @@ def query(msg):
                         bot.answerCallbackQuery(query_id, text ="Reached last page")
                 else:
                     raise e
+        bot.answerCallbackQuery(query_id, text ="Page " + str(page))
 
     elif query_data.startswith("buy_"):
         # the buy call back has to do with anything that costs money        
@@ -1172,7 +1190,36 @@ def query(msg):
                             user.sendBuyReputation(cb_query.getChatMsgID(), bot, edit=True)
                             bot.answerCallbackQuery(query_id, text = "Bough reputation, great deal!")                            
                     
+    elif query_data.startswith("lns_"):
+        cb_query = CbkQuery(msg)
+        user = categories.user_profile_db.getData(from_id).getData()
+        
+        print("language settings")
+        s = query_data.split("_")
+        user_tag = s[1]
+        
+        # read the language tag file
+        with open("./languages/language_tags.txt") as f:
+            lines = f.readlines()
+        
+        lang_tags = []
+        for line in lines:
+            tag = line.strip()
+            lang_tags.append(tag)
+        
+        print("usr tag before", user.lang_tag)
             
+        for tag in lang_tags:
+            if user_tag in tag:
+                user.lang_tag = tag
+                break
+        print("usr tag after", user.lang_tag)        
+        
+        categories.user_profile_db.setData(Data(user.id, user))
+        categories.user_profile_db.updateDb()
+        
+        bot.answerCallbackQuery(query_id, user.lang_tag)
+        
     elif query_data.startswith("createcat_"):
         # split the query data
         catd = query_data.split("_")

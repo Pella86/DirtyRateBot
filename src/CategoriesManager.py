@@ -628,7 +628,7 @@ class Categories:
         # build the string containg the catecogry
         cattitle = "<b> " + category.getTitleStr() + " </b>"
         m  = "{0:~^30}\n".format(cattitle)
-        m += "Category score: {0}\n".format(category.score)
+        m += "Category score: {0}\n".format(em.suffix_numbers(category.score))
         v, t = user.getMediaVoted(category.name, self)
         m += "<i>Voted: {0} / Total: {1}</i>\n".format(v, t)
         m += "\n"
@@ -747,35 +747,77 @@ class Categories:
 
         message += "/main_menu | Page: {page}/{maxpage}".format(page=page, maxpage=maxpage)
         
-        prevpage = 1
-        if page > 1:
-            prevpage = page - 1
-        cbprevpage = querytag + "_" + str(prevpage)
-        bprev = InlineKeyboardButton(
-                text = "< previous",
-                callback_data=cbprevpage
-                )
-        if args:
-            for arg in args:
-                cbprevpage += "_" + str(arg)
-
-
-        nextpage = maxpage
-        if page < maxpage:
-            nextpage = page + 1
-        cbnextpage = querytag + "_" + str(nextpage) 
+        # institute the previous button table
         
-        if args:
-            for arg in args:
-                cbnextpage += "_" + str(arg)
-
-        bnext = InlineKeyboardButton(
-                text = "next >",
-                callback_data=cbnextpage
-                )
-
-        rmk = InlineKeyboardMarkup(inline_keyboard=[[bprev,bnext],])
-
+        
+        
+        m = 1
+        
+        bprev_list = []
+        
+        
+        print("creation back button")
+        while page / m > 1:
+            
+            print(page, m, page-m)
+            
+            if page > m:
+                prevpage = page - m
+                
+                cb_prev = querytag + "_" + str(prevpage)
+                for arg in args:
+                    cb_prev += "_" + str(arg)
+                
+                bl_str = "<< -{}".format(m)
+                
+                bprev = InlineKeyboardButton(text=bl_str, callback_data=cb_prev)
+                
+                bprev_list.append(bprev)
+            
+            m *= 10
+        
+        
+        m = 1
+        
+        bnext_list = []
+        
+        print("creation next button")
+        while maxpage / m >= 1:
+            
+            print(page, m, page-m)
+            
+            if page + m <= maxpage:
+                nextpage = page + m
+            
+                cb_next = querytag + "_" + str(nextpage)
+                for arg in args:
+                    cb_next += "_" + str(arg)            
+        
+                bl_str = "+{} >>".format(m)
+                
+                bnext= InlineKeyboardButton(text=bl_str, callback_data=cb_next)
+                
+                bnext_list.append(bnext)            
+         
+            m *= 10
+            
+        i = 0  
+        in_key = []
+        while i < max(len(bprev_list), len(bnext_list)):
+            row = []
+            if i < len(bprev_list):
+                row.append(bprev_list[i])
+            
+            if i < len(bnext_list):
+                row.append(bnext_list[i])
+            
+            
+            i += 1
+            print(" ".join(b.text for b in row))
+            in_key.append(row)
+            
+        
+        rmk = InlineKeyboardMarkup(inline_keyboard=in_key)
 
         if ipage is None:
             self.bot.sendMessage(chatid, message, parse_mode = "HTML", reply_markup = rmk)
