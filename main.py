@@ -1399,6 +1399,9 @@ if __name__ == "__main__":
     msg += "- media will lose karma with time\n"
     msg += "- translation\n"
     msg += "\n"
+    msg += "The update is done, if you have more feature to suggest feel free to contact me @PmPellaBot\n"
+    msg += "This bot will shut down, and the updates will be transfered to the @DirtyRateBot"
+    msg += "\n"
     msg += "Happy protting."
     
     announce.announce_all_users(msg)
