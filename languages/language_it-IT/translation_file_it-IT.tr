@@ -478,3 +478,19 @@ The flags should represent in which country the language is spoken, since I coul
 Translated String:
 
 
+-----English String:
+User {user} upoaded the picture
+Category: {category}
+Category tag: {tag}
+Media score: {score}
+
+
+Translated String:
+
+
+-----English String:
+Media already in database
+
+Translated String:
+
+
