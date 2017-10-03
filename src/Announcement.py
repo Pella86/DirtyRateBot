@@ -6,8 +6,6 @@ Created on Sun Sep 24 14:06:57 2017
 """
 
 import threading
-from telepot.exception import BotWasBlockedError
-from Databases import Data
 
 import os
 import datetime
@@ -26,12 +24,12 @@ class Announcement:
         self.success_daily = {}
         
         # open the directory
-        succssessdir = "./data/announcements/"
+        succssessdir = "./announcements/"
         if not os.path.isdir(succssessdir):
             os.mkdir(succssessdir)
         
         # create a log file for the custom announcments
-        self.successfile = "./data/announcements/main_success_log.txt"
+        self.successfile = "./announcements/main_success_log.txt"
         if os.path.isfile(self.successfile):
             with open(self.successfile, 'r') as f:
                 lines = f.readlines()
@@ -43,9 +41,9 @@ class Announcement:
         
         
         # create a log file for the custom announcments
-        self.success_daily_file = "./data/announcements/success_daily_log.txt"
-        self.daily_announcement_done = "./data/announcements/daily_announcement_done.txt"
-        self.star_timer_file = "./data/announcements/start_timer.txt"
+        self.success_daily_file = "./announcements/success_daily_log.txt"
+        self.daily_announcement_done = "./announcements/daily_announcement_done.txt"
+        self.star_timer_file = "./announcements/start_timer.txt"
         if os.path.isfile(self.success_daily_file):
             
             lines = []
@@ -80,7 +78,7 @@ class Announcement:
     
     def announce_text(self, user, text):
         text = text if len(text) > 10 else "{0: >10}".format(text)
-        print("Sending (", text[0:10], ")to", user.anonid)        
+        print("Announcement\nSending (", text[0:10], "...)to", user.anonid)        
         user.sendNotification("main-announcement", text, self.bot, self.chatsdb)
         self.success[user.id] = True
         
@@ -121,7 +119,7 @@ class Announcement:
             
                 t.start()
                 
-                print("Announcement for", user.anonid, "starts in", secs,"seconds, users announced", usercount)
+                print("Announcement\n", user.anonid, "starts in", secs,"seconds, users announced", usercount)
                 
             secs += apilimit
                 
@@ -207,10 +205,10 @@ class Announcement:
         return
         
     def announce_daily(self, catManager):
-        print("Daily routine work")
+        print("\nDaily routine work")
         catManager.maintenence()
         
-        print("Try sending announcement", datetime.datetime.now())
+        print("Try sending announcement at:", datetime.datetime.now())
         nowtime = datetime.datetime.now()
         timedelta = datetime.timedelta(days=1)
 
@@ -218,7 +216,7 @@ class Announcement:
         
         is_day_passed = (timediff > timedelta)
         
-        print("is it time", is_day_passed)
+        print("is it time:", is_day_passed)
         
         if is_day_passed:
             # delete the done file
@@ -271,10 +269,7 @@ class Announcement:
                     last = False
                     if user.id == userlist[-1].getData().id:
                         last = True
-                        
-                    
-                    
-                    print("is last", last)
+
                     t = threading.Timer(secs, self.daily_announcement_text, args=(user, last, day_cat, day_media))
                 
                     t.start()
@@ -294,7 +289,6 @@ class Announcement:
     
     def run_daily(self, catManager):
         while 1:
-            print("start thread")
             t = threading.Thread(target=self.announce_daily, args=(catManager,))
             t.start()
             time.sleep(2*60*60)
