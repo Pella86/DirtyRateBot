@@ -748,14 +748,10 @@ class Categories:
         message += "/main_menu | Page: {page}/{maxpage}".format(page=page, maxpage=maxpage)
         
         # institute the previous button table
-        
-        
-        
         m = 1
         
         bprev_list = []
-        
-        
+
         print("creation back button")
         while page / m > 1:
             
@@ -895,8 +891,8 @@ class Categories:
             
 
             sdb = {}
-            sdb["ipos"] = (page - 1) * maxpage + 1
-            sdb["endpos"] = sdb["ipos"] + maxpage
+            sdb["ipos"] = (page - 1) * maxperpage + 1
+            sdb["endpos"] = sdb["ipos"] + maxperpage
             sdb["catnames"] = "|".join(cat.screen_name for cat in categories)
                         
             s = '<b>--- For the categories: {catnames} ---</b>\n'.format(**sdb)
@@ -951,7 +947,7 @@ class Categories:
             tot_users = len(userlist)
             s += "<i>Users in this category: " + str(tot_users) + "</i>\n"
 
-            self.sendPage(chatid, maxpage, maxperpage, s, page, ipage, "cmputc") 
+            self.sendPage(chatid, maxpage, maxperpage, s, page, ipage, "cmputc", args=catnames) 
         else:
             self.bot.sendMessage(chatid, _("No media in this category", requser.lang_tag))
             

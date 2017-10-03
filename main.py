@@ -20,7 +20,6 @@ import time
 import pickle
 import datetime
 import urllib3
-import datetime
 import random
 import re
 
@@ -32,7 +31,6 @@ from Databases import Database, Data
 from UserProfile import UserProfile
 from Category import Category
 from SuperGroup import SuperGroup
-from ContentVote import ContentVote
 from CategoriesManager import Categories
 from Announcement import Announcement
 from LanguageSupport import _
@@ -109,7 +107,6 @@ class BotDataReader:
 
         print(self.id)
         print(self.tag)
-        print(self.token)
 
 dbot = BotDataReader()
 bot_id = dbot.id
@@ -1363,16 +1360,14 @@ if __name__ == "__main__":
 
     categories = Categories(bot)
     
-    #categories.categories_db.updateDatabaseEntry({"screen_name": lambda x : x.name, "creation_date": lambda x : datetime.datetime.now()}, "./data/categories_update_success.txt")
-    
-    #categories.media_vote_db.updateDatabaseEntry({"creation_date": lambda x : datetime.datetime.now()}, "./data/media_update_success.txt")
-    
+#    categories.categories_db.updateDatabaseEntry({"screen_name": lambda x : x.name, "creation_date": lambda x : datetime.datetime.now()}, "./data/categories_update_success.txt")
+#    
+#    categories.media_vote_db.updateDatabaseEntry({"creation_date": lambda x : datetime.datetime.now()}, "./data/media_update_success.txt")
+#    
 #    def calcK(x):
 #        usermedia = x.getUploadedContent(categories)
-#        print(len(usermedia))
 #        return x.calculateKarma(usermedia)   
-#        
-#    
+#
 #    categories.user_profile_db.updateDatabaseEntry({'karma': lambda x : calcK(x)}, "./data/user_profile_karma_update.txt")
 
     
@@ -1381,23 +1376,23 @@ if __name__ == "__main__":
     MessageLoop(bot, {'chat': handle,
                      'callback_query': query,
                      'chosen_inline_result': on_chosen_inline_result
-
                      }
                 ).run_as_thread()
 
     announce = Announcement(bot, categories, chatsdb)
     
-    msg = "Hello beta testers,\n"
+    msg = "Hello dirty rate bot users,\n"
+    msg += "<b>The bot has been updated with new features</b>\n"
     msg += "New features in the bot:\n"
     msg += "- Sending this messages to the whole community\n"
     msg += "- Sending a summary every day\n"
     msg += "- Possibility to delete media\n"
     msg += "- Nicer /my_uploads presentation\n"
-    msg += "- Reduced price to buy more uploads (base price 50) and to buy a category (base price 500)\n"
+    msg += "- Reduced price to buy more uploads (base price 40) and to buy a category (base price 500)\n"
     msg += "- Nicer user top chart presentation(/user_top)\n"
-    msg += "- user top chart per category\n"
-    msg += "- media will lose karma with time\n"
-    msg += "- translation\n"
+    msg += "- user top chart per category under /top_media\n"
+    msg += "- media will lose karma with time, thus the top media chart will have some shuffling, hopefully\n"
+    msg += "- translation, see /set_language\n"
     msg += "\n"
     msg += "Happy protting."
     
