@@ -20,7 +20,6 @@ import time
 import pickle
 import datetime
 import urllib3
-import datetime
 import random
 import re
 
@@ -32,7 +31,6 @@ from Databases import Database, Data
 from UserProfile import UserProfile
 from Category import Category
 from SuperGroup import SuperGroup
-from ContentVote import ContentVote
 from CategoriesManager import Categories
 from Announcement import Announcement
 from LanguageSupport import _
@@ -65,13 +63,13 @@ with open("./botdata/Config.txt", "r") as f:
     lines = f.readlines()
 
 # parse the arguments
-commands = {} 
+commands = {}
 for line in lines:
     s = line.split("=")
     s = list(map(str.strip, s))
-    
+
     print(s)
-    
+
     commands[s[0]] = s[1]
 
 # verify is on server
@@ -109,7 +107,6 @@ class BotDataReader:
 
         print(self.id)
         print(self.tag)
-        print(self.token)
 
 dbot = BotDataReader()
 bot_id = dbot.id
@@ -227,7 +224,7 @@ def handle(msg):
                     dspg = Data(spg.id, spg)
                     supergroupsdb.setData(dspg)
                     supergroupsdb.updateDb()
-                
+
                 elif mymsg.content.text in create_command_tag("/list_categories"):
                     spg.sendCategoryList(categories)
 
@@ -330,10 +327,10 @@ def handle(msg):
                     dspg = Data(spg.id, spg)
                     supergroupsdb.setData(dspg)
                     supergroupsdb.updateDb()
-                
+
                 elif mymsg.content.text in create_command_tag("/help"):
                     help_msg = Helpmsg.help_msg_supergroups("en-EN")
-                    bot.sendMessage(chatid, help_msg, parse_mode = "HTML")                   
+                    bot.sendMessage(chatid, help_msg, parse_mode = "HTML")
 
             if mymsg.content.text.startswith("/vote"):
                 lg.log("------------ NEW MESSAGE ------------")
@@ -482,19 +479,19 @@ def handle(msg):
                 elif mymsg.content.text.startswith("/my_uploads"):
                     lg.log("requested my uploads")
                     categories.sendUserUploadsPage(mymsg.chat.id, user, chatsdb)
-                    
+
                 elif mymsg.content.text == "/profile":
                     lg.log("requested profile")
                     user.sendProfileInfo(mymsg.chat.id, bot, categories)
-                
+
                 elif mymsg.content.text == "/set_language":
-                    
+
                     # create a button for every language tag existing
-                    
+
                     # read the language tag file
                     with open("./languages/language_tags.txt") as f:
                         lines = f.readlines()
-                    
+
                     lang_tags = []
                     for line in lines:
                         tag = line.strip()
@@ -502,30 +499,30 @@ def handle(msg):
                             tag = tag[0:2]
                             if tag not in lang_tags:
                                 lang_tags.append(tag)
-                    
+
                     # create a table of buttons
-                    
+
                     buttons = []
                     for tag in lang_tags:
-                        
+
                         bl_str = get_language_flag(tag)
-                            
+
                         btag = InlineKeyboardButton(text=bl_str, callback_data="lns_" + tag)
                         buttons.append(btag)
-                        
+
                     buttons = [[b] for b in buttons]
-                    
+
                     rmk = InlineKeyboardMarkup(inline_keyboard=buttons)
-                        
-                        
+
+
                     bot.sendMessage(mymsg.chat.id, _("Please select one of the languages.\n\nIf the bot remains in english, is because the language hasn't been translated yet.\n\nThe flags should represent in which country the language is spoken, since I couldnt decide if to put the american flag or the british flag for english.\n\n/main_menu", user.lang_tag), reply_markup=rmk)
 
                 elif mymsg.content.text.startswith("/show_"):
                     lg.log("requested show")
-                    
+
                     param = re.split(" |_", mymsg.content.text)
                     print(param)
-                    
+
                     categoryname = ""
                     nmax = 3
                     uid = None
@@ -540,12 +537,12 @@ def handle(msg):
                                     nmax = int(param[3])
                                 except ValueError:
                                     nmax = 3
-                        
+
                         lg.log("{0} {1}".format(categoryname, nmax))
                         if categoryname:
                             categories.sendShowTop(mymsg.chat.id, categoryname, chatsdb, nmax)
                         else:
-                            bot.sendMessage(mymsg.chat.id, "Usage: show_top [category] [number of pictures]\n/main_menu")          
+                            bot.sendMessage(mymsg.chat.id, "Usage: show_top [category] [number of pictures]\n/main_menu")
                     else:
                         categoryname = param[1]
                         if len(param) == 3:
@@ -558,7 +555,7 @@ def handle(msg):
                                     break
                         else:
                             print("requested show for: ", categoryname)
-                            categories.showCategoryPrivate(mymsg.chat.id, user, categoryname, chatsdb)                            
+                            categories.showCategoryPrivate(mymsg.chat.id, user, categoryname, chatsdb)
 
                 elif mymsg.content.text.startswith("/user_top"):
                     lg.log("requested top")
@@ -971,7 +968,7 @@ def query(msg):
         userid = int(commands[2])
 
         user = categories.user_profile_db.getData(userid).getData()
-        
+
         if nottag not in user.receive_notifications or user.receive_notifications[nottag]:
             user.receive_notifications[nottag] = False
             bot.answerCallbackQuery(query_id, text= nottag + " muted")
@@ -983,29 +980,29 @@ def query(msg):
 
     elif query_data.startswith("cmp"):
         args = query_data.split("_")
-        
+
         print(args)
-        
+
         identifier = args[0]
         page = int(args[1])
-        
+
         print(identifier, page)
-        
+
         cbkquery = CbkQuery(msg)
 
         topmedia = False
         menu = False
         user = None
         sendMenu = True
-        
+
 
         if identifier == "cmps":
             pass
-        
+
         elif identifier == "cmptm":
             topmedia = True
             user = categories.user_profile_db.getData(cbkquery.person.id).getData()
-    
+
         elif identifier == "cmpuu":
             user = categories.user_profile_db.getData(cbkquery.person.id).getData()
             try:
@@ -1019,7 +1016,7 @@ def query(msg):
                 else:
                     raise e
             sendMenu = False
-        
+
         elif identifier == "cmput":
             user = categories.user_profile_db.getData(cbkquery.person.id).getData()
             try:
@@ -1033,7 +1030,7 @@ def query(msg):
                 else:
                     raise e
             sendMenu = False
-            
+
         elif identifier == "cmputc":
             user = categories.user_profile_db.getData(cbkquery.person.id).getData()
             catnames = args[2:]
@@ -1042,7 +1039,7 @@ def query(msg):
             if catnames:
                 try:
                     categories.sendUserTopCategory(cbkquery.getChatMsgID(), user, catnames,  page)
-                    
+
                 except TelegramError as e:
                     if e.error_code == 400:
                         if page == 1:
@@ -1052,10 +1049,10 @@ def query(msg):
                     else:
                         raise e
             else:
-                bot.answerCallbackQuery(query_id, text ="Only one page") 
+                bot.answerCallbackQuery(query_id, text ="Only one page")
             sendMenu = False
-        
-            
+
+
         else:
             menu = True
             user = categories.user_profile_db.getData(cbkquery.person.id).getData()
@@ -1063,8 +1060,8 @@ def query(msg):
         if sendMenu:
             try:
                 categories.sendSelectCategoryMenu(cbkquery.getChatMsgID(), ipage=page, sort=True, menu=menu, topmedia=topmedia, user=user )
-                
-    
+
+
             except TelegramError as e:
                 if e.error_code == 400:
                     if page == 1:
@@ -1076,23 +1073,23 @@ def query(msg):
         bot.answerCallbackQuery(query_id, text ="Page " + str(page))
 
     elif query_data.startswith("buy_"):
-        # the buy call back has to do with anything that costs money        
-        # split the buy callback data by underscore       
+        # the buy call back has to do with anything that costs money
+        # split the buy callback data by underscore
         param = query_data.split("_")
-        
+
         # check if there's more than one element, meaning that the list of
         # parameters contains [buy, identifier, cost, ...]
         if len(param) > 1:
             # initialize the call back elements (user and the call back structure)
             cb_query = CbkQuery(msg)
             user = categories.user_profile_db.getData(from_id).getData()
-            
+
             # get the identifier (calcp, uploads, delete, rp)
-            identifier = param[1] 
-            
+            identifier = param[1]
+
             if identifier == "calcp":
                 print("calculate the probability")
-                categories.sendProbability(user.getChatID(chatsdb), user, categories.user_profile_db)            
+                categories.sendProbability(user.getChatID(chatsdb), user, categories.user_profile_db)
             else:
                 # transform the third parameter in int
                 try:
@@ -1113,7 +1110,7 @@ def query(msg):
                     if identifier == "rp":
                         rp = cost
                         cost = calc_rep_cost(user, rp)
-                    
+
                     if cost > user.points:
                         bot.sendMessage(user.getChatID(chatsdb), text = not_enoug_money_msg)
                         bot.answerCallbackQuery(query_id, text = "Not enough money")
@@ -1131,13 +1128,13 @@ def query(msg):
                             # send relative messages and callbacks / edit the previous message
                             # with the new prices
                             bot.sendMessage(user.getChatID(chatsdb), text = "You have now 5 more uploads")
-                            bot.answerCallbackQuery(query_id, text = "Bough uploads, great deal!")                            
+                            bot.answerCallbackQuery(query_id, text = "Bough uploads, great deal!")
                         elif identifier == "delete":
-                            
+
                             # delete media
                             mediauid = None
                             media = None
-                            
+
                             try:
                                 mediauid = int(param[3])
                             except ValueError:
@@ -1146,7 +1143,7 @@ def query(msg):
                                 print(e)
                                 print("buy_delete_: Unknown Error")
                                 raise e
-                            
+
                             # find the media
                             if mediauid is not None:
                                 for dmedia in categories.media_vote_db.values():
@@ -1154,7 +1151,7 @@ def query(msg):
                                     if tmp_media.uid == mediauid:
                                         media = tmp_media
                                         break
-                                
+
                             if mediauid is not None and media is not None:
                                 # update media status
                                 media.deleted = True
@@ -1166,11 +1163,11 @@ def query(msg):
                                 duser = Data(user.id, user)
                                 categories.user_profile_db.setData(duser)
                                 categories.user_profile_db.updateDb()
-                                
+
                                 # for scenic effect delete the media
                                 bot.deleteMessage(cb_query.getChatMsgID())
-                                bot.answerCallbackQuery(query_id, text = "Picture deleted from database")                            
-                                    
+                                bot.answerCallbackQuery(query_id, text = "Picture deleted from database")
+
                         elif identifier == "rp":
 
                             print("user points: ", user.points)
@@ -1188,38 +1185,38 @@ def query(msg):
                             # with the new prices
                             bot.sendMessage(user.getChatID(chatsdb), text = "You bought " + str(em.RPstr(rp)) + "\nYou now have a reputation of " + str(user.getReputationStr()))
                             user.sendBuyReputation(cb_query.getChatMsgID(), bot, edit=True)
-                            bot.answerCallbackQuery(query_id, text = "Bough reputation, great deal!")                            
-                    
+                            bot.answerCallbackQuery(query_id, text = "Bough reputation, great deal!")
+
     elif query_data.startswith("lns_"):
         cb_query = CbkQuery(msg)
         user = categories.user_profile_db.getData(from_id).getData()
-        
+
         print("language settings")
         s = query_data.split("_")
         user_tag = s[1]
-        
+
         # read the language tag file
         with open("./languages/language_tags.txt") as f:
             lines = f.readlines()
-        
+
         lang_tags = []
         for line in lines:
             tag = line.strip()
             lang_tags.append(tag)
-        
+
         print("usr tag before", user.lang_tag)
-            
+
         for tag in lang_tags:
             if user_tag in tag:
                 user.lang_tag = tag
                 break
-        print("usr tag after", user.lang_tag)        
-        
+        print("usr tag after", user.lang_tag)
+
         categories.user_profile_db.setData(Data(user.id, user))
         categories.user_profile_db.updateDb()
-        
+
         bot.answerCallbackQuery(query_id, user.lang_tag)
-        
+
     elif query_data.startswith("createcat_"):
         # split the query data
         catd = query_data.split("_")
@@ -1362,50 +1359,48 @@ if __name__ == "__main__":
     answerer = telepot.helper.Answerer(bot)
 
     categories = Categories(bot)
-    
-    #categories.categories_db.updateDatabaseEntry({"screen_name": lambda x : x.name, "creation_date": lambda x : datetime.datetime.now()}, "./data/categories_update_success.txt")
-    
-    #categories.media_vote_db.updateDatabaseEntry({"creation_date": lambda x : datetime.datetime.now()}, "./data/media_update_success.txt")
-    
+
+#    categories.categories_db.updateDatabaseEntry({"screen_name": lambda x : x.name, "creation_date": lambda x : datetime.datetime.now()}, "./data/categories_update_success.txt")
+#
+#    categories.media_vote_db.updateDatabaseEntry({"creation_date": lambda x : datetime.datetime.now()}, "./data/media_update_success.txt")
+#
 #    def calcK(x):
 #        usermedia = x.getUploadedContent(categories)
-#        print(len(usermedia))
-#        return x.calculateKarma(usermedia)   
-#        
-#    
+#        return x.calculateKarma(usermedia)
+#
 #    categories.user_profile_db.updateDatabaseEntry({'karma': lambda x : calcK(x)}, "./data/user_profile_karma_update.txt")
 
-    
+
     lg.log("- Databases Loaded -", True)
-    
+
     MessageLoop(bot, {'chat': handle,
                      'callback_query': query,
                      'chosen_inline_result': on_chosen_inline_result
-
                      }
                 ).run_as_thread()
 
     announce = Announcement(bot, categories, chatsdb)
-    
-    msg = "Hello beta testers,\n"
+
+    msg = "Hello dirty rate bot users,\n"
+    msg += "<b>The bot has been updated with new features</b>\n"
     msg += "New features in the bot:\n"
     msg += "- Sending this messages to the whole community\n"
     msg += "- Sending a summary every day\n"
     msg += "- Possibility to delete media\n"
     msg += "- Nicer /my_uploads presentation\n"
-    msg += "- Reduced price to buy more uploads (base price 50) and to buy a category (base price 500)\n"
+    msg += "- Reduced price to buy more uploads (base price 40) and to buy a category (base price 500)\n"
     msg += "- Nicer user top chart presentation(/user_top)\n"
-    msg += "- user top chart per category\n"
-    msg += "- media will lose karma with time\n"
-    msg += "- translation\n"
+    msg += "- user top chart per category under /top_media\n"
+    msg += "- media will lose karma with time, thus the top media chart will have some shuffling, hopefully\n"
+    msg += "- translation, see /set_language\n"
     msg += "\n"
     msg += "The update is done, if you have more feature to suggest feel free to contact me @PmPellaBot\n"
     msg += "This bot will shut down, and the updates will be transfered to the @DirtyRateBot"
     msg += "\n"
     msg += "Happy protting."
-    
+
     announce.announce_all_users(msg)
-    
+
     announce.run_daily(categories)
 
     print ('Listening ...')

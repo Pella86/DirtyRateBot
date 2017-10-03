@@ -10,3 +10,14 @@ es
 it
 ar-AE
 en-IN
+iw-IL
+fa-IR
+ru-RU
+en-DK
+de-DE
+en-AF
+zh-CN
+ar-IQ
+nl-NL
+es-ES
+en-LB
