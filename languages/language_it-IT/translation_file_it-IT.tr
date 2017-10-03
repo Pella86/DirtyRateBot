@@ -5,6 +5,7 @@ Translated String:
 slienzia notifiche
 
 
+
 -----English String:
 <b> prot --- Main Menu --- prot </b>
 <i>Choose a category to see or vote the pictures, media, belonging to it</i>
@@ -55,6 +56,7 @@ Comincia QUI!!!
 
 
 
+
 -----English String:
 @DirtyRateBot version: {version}
 <i>This bot allows you to upload and rate media with the rest of the bot community.
@@ -96,6 +98,7 @@ vedi /help_points, /help_karma, /help_reputation
 Puoi usare il  bot nei supegruppi con il comando /vote.
 
 Se sei un admin del gruppo puoi selezionare le categorie che vuoi, guarda per /help_supergroups per maggiori informazioni.
+
 
 
 
@@ -157,6 +160,7 @@ Per vedere cosa hai caricato usa
 
 
 
+
 -----English String:
 <b>- Points {pemoji} -</b>
 You earn +{1 point} when you vote and +{5 points} when you /upload.
@@ -169,6 +173,7 @@ Translated String:
 Guadagni +{1 point} se voti mentre se carichi un media (/upload) guadagni +{5 points}.
 Quando qualcuno upvota i tuoi media tu guadagni +{1 point} ma ne perdi -{1 point} se qualcuno mette un downvote.
 I punti servono a aumentare la reputazione {remoji} (/buy_reputation), che aumenta la probabilità che i tuoi media vengano votati.
+
 
 
 
@@ -193,11 +198,14 @@ Carica media nel bot usando il comando /upload
 
 
 
+
 -----English String:
 You voted all the pictures in this category use
 
 Translated String:
 Hai votato tutte i media in questa categoria
+
+
 
 
 -----English String:
@@ -209,11 +217,15 @@ I media verranno caricati sotto la categoria che sceglerai.
 Scegli il nome di una categoria:
 
 
+
+
 -----English String:
 Content uploaded successfully
 
 Translated String:
 Contenuto caricato con successo
+
+
 
 
 -----English String:
@@ -223,11 +235,15 @@ Translated String:
 Nessun media in questa categoria
 
 
+
+
 -----English String:
 Please send your nickname, the nickname must be minumum 3 characters and maximum 15, it can contain only alphanumeric characters (a-z, A-Z, 0-9)
 
 Translated String:
 Prego, invia il tuo nuovo nickname. Il nickname deve avere un minimo do 3 caratteri e un massimo di 15, può contenere solo caratteri alfanumerici (cioè a-z, A-Z, 0-9)
+
+
 
 
 -----English String:
@@ -237,6 +253,8 @@ Translated String:
 Il nickname deve essere più di 3 caratteri e meno di 15 caratteri
 
 
+
+
 -----English String:
 Nickname changed successfully
  /main_menu
@@ -244,6 +262,8 @@ Nickname changed successfully
 Translated String:
 Il nickname è stato cambiato con successo
 /main_menu
+
+
 
 
 -----English String:
@@ -261,18 +281,38 @@ Vould you like to buy more RP?
 
 
 Translated String:
+<b>--- Compra reputazione ---</b>
+<i>Con una reputazione più alta i tuoi media verrano esposti prima al pubblico, perciò, più reputazione più punti.</i>
+
+Attualmente hai {rep_points} punti reputazione
+Tu hai un karma di {karma}
+Questi due valori generano una reputazione di {rep}
+Formula per la reputazione:
+ <code>karma * punti reputazione</code>
+
+Hai {points} punti
+Vuoi comprare più punti reputazione?
+
+
+
 
 
 -----English String:
 Buy {qrp} for {points}
 
 Translated String:
+Compra {qrp} per {points}
+
+
 
 
 -----English String:
 Calculate media probability (not working)
 
 Translated String:
+Calcola la pro(non funziona)
+
+
 
 
 -----English String:
@@ -284,12 +324,23 @@ Create a category will cost {price} you have {points}
 
 
 Translated String:
+Scrivi il nome di una categoria
+<i>Il nome deve essee al massimo di 15 caratteri e può contenere solo caratteri alfanumerici (a-z e A-Z e 1-10)</i>
+
+Crea una categoria, ti costerà {price} tu hai {points} punti
+/cancel
+
+
+
 
 
 -----English String:
 Operation aborted (must be text and not a command) /add_category again or /main_menu
 
 Translated String:
+Operazione annullata (deve essere un comando di testo) riprova con /add_category di nuovo o /main_menu
+
+
 
 
 -----English String:
@@ -297,6 +348,10 @@ Category not found
 You can add the category using /add_category
 
 Translated String:
+Categoria non trovata
+Puoi aggiungere una categoria con /add_category
+
+
 
 
 -----English String:
@@ -311,6 +366,17 @@ When a person wants to vote, the media are orderd by reputation of the user.
 use the command /buy_reputation
 
 Translated String:
+<b>- Reputazione {remoji} -</b>
+La reputazione viene mostrata vicino allo username (o all id anonimo {anonem}).
+La reputazione è calcolata dai tuoi punti reputazione(/buy_reputation) moltiplicati per il tuo karma {kemoji} (se hai un karma positivo).
+
+La reputazione determina come i media sono presentati.
+QQuando una persona vuole votare, i media sono ordinati per la reputazione dell'utente.
+
+- Come aumento la reputazione?
+usa il comando /buy_reputation
+
+
 
 
 -----English String:
@@ -321,6 +387,14 @@ If the bot remains in english, is because the language hasn't been translated ye
 The flags should represent in which country the language is spoken, since I couldnt decide if to put the american flag or the british flag for english.
 
 Translated String:
+Prego scegliere una lingua.
+
+Se il bot rimane in inglese, è percheè il file contente la traduzione non è ancora stato creato.
+
+Le bandiere dovrebbero rappresentare tutti i paesi dove il linguaggio è parlato. Dato che non riuscivo a decidere se mettere la bandiera americana o quella inglese.
+
+
+
 
 
 -----English String:
@@ -333,6 +407,16 @@ The flags should represent in which country the language is spoken, since I coul
 /main_menu
 
 Translated String:
+Prego scegliere una lingua.
+
+Se il bot rimane in inglese, è percheè il file contente la traduzione non è ancora stato creato.
+
+Le bandiere dovrebbero rappresentare tutti i paesi dove il linguaggio è parlato. Dato che non riuscivo a decidere se mettere la bandiera americana o quella inglese.
+
+/main_menu
+
+
+
 
 
 -----English String:
@@ -353,6 +437,22 @@ List of admin commands: (use them in group)
 
 
 Translated String:
+<b>- Aiuto super gruppi -</b>
+Gli utenti possono usare il comando /vote e il bot prenderà un media ddal gruppo di categorie scelte dagli amministratori.
+Se sei admin o creatore di un supergruppo, puoi decidere quali categorie vengano mostrate.
+Di default il bot mostrerà categorie safe for work (SFW). Le categorie: meme, natura e spazio.
+Gli admin posson usare una serie di comandi per impostare o rimuovere nuove categorie.
+Lista dei comandi di admin: (Usare i comandi nel gruppo)
+/set_all: imposta tutte le categorie
+/rem_all: silenzia tutte le categorie
+/set_categories: gli admin posson scegliere le categorie separate da virgola (,).
+/rem_categories: seleziona quali categorie togliere
+/reset_all: resetta le categorie di default
+/set_porngore: permette al bot di mostrare categorie NSFW: porno e gore
+/set_kinky: aggiunge categorie NSFW ma esclude le categorie gore
+/list_categories: Mostra quali categorie sono attive
+
+
 
 
 -----English String:
@@ -363,6 +463,13 @@ The bot will ask for a category
 If the bot says success, you made it
 
 Translated String:
+<b>- Caricare media -</b>
+Usa il comando /upload per caricare media nel bot.
+Il bot chiederà se vuoi aggiungere un media (che può essere una foto, gif, video o documento).
+Poi il bot chiederà di nominare una categoria.
+Se il bot dice successo! allora ce l'hai fatta.
+
+
 
 
 -----English String:
@@ -398,10 +505,16 @@ To see your uploaded media press
 Translated String:
 
 
+
+
+
 -----English String:
 mute notification 
 
 Translated String:
+silenzia notifiche
+
+
 
 
 -----English String:
@@ -430,6 +543,8 @@ START HERE!!
 
 
 Translated String:
+
+
 
 
 -----English String:
@@ -468,6 +583,9 @@ Translated String:
 
 <<<<<<< HEAD
 =======
+
+
+
 -----English String:
 Please select one of the languages.
 
@@ -480,6 +598,9 @@ The flags should represent in which country the language is spoken, since I coul
 Translated String:
 
 
+
+
+
 -----English String:
 User {user} upoaded the picture
 Category: {category}
@@ -490,6 +611,8 @@ Media score: {score}
 Translated String:
 
 
+
+
 -----English String:
 Media already in database
 
@@ -497,3 +620,82 @@ Translated String:
 
 
 >>>>>>> master
+
+
+-----English String:
+<b> prot --- Main Menu --- prot </b>
+<i>Choose a category to see or vote the pictures, media, belonging to it</i>
+
+<b>--- Category ---</b>
+START HERE!!
+/categories
+
+<b>--- Top users and media ---</b>
+<i>The top chart of media and users by category</i>
+/top_media
+
+<b>--- Profile ---</b>
+<i>Your profile containing the information about points </i>
+/profile
+
+<b>--- Upload ---</b>
+<i>Upload your media to the bot</i>
+/upload
+
+<b>--- HELP ---</b>
+/help
+
+
+
+Translated String:
+
+
+
+-----English String:
+<b>- {anon_emoji} User Profile {user_face} {space_shuttle}-</b>
+<i>Your anonymous id is: {anonid}</i>
+Change nickname: /set_nickname
+
+<b>- Current Status -</b>
+Points: {points} | /help_points
+Karma: {karma} | /help_karma
+Reputation points: {rep_points}
+Reputation: {reputation}
+/help_reputation
+<i>To increase your reputation use</i>
+/buy_reputation
+
+<b>- My Uploads -</b>
+You uploaded a total of {nup} media
+Today you uploaded {dup} media
+To see your uploaded media press
+/my_uploads
+
+<b>- Create a category -</b>
+/add_category
+
+<b>--- Users top chart ---</b>
+/user_top
+
+<b>--- Users top chart ---</b>
+/set_language
+
+/main_menu
+
+Translated String:
+
+
+
+-----English String:
+Please select one of the languages.
+
+If the bot remains in english, is because the language hasn't been translated yet.
+
+The flags should represent in which country the language is spoken, since I couldnt decide if to put the american flag or the british flag for english.
+
+/main_menu
+
+Translated String:
+
+
+

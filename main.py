@@ -504,9 +504,19 @@ def handle(msg):
 
                     buttons = []
                     for tag in lang_tags:
-
-                        bl_str = get_language_flag(tag)
-
+                        try:
+                            bl_str = get_language_flag(tag)
+                        except KeyError as key:
+                            # if there is a key error there is possibly a 
+                            # language that is not tagged write a file with 
+                            # the language tags that are missing either flags
+                            # or long names
+                            print("Key not found", key)
+                            
+                            with open("./languages/missing_languages.txt", "a") as f:
+                                f.write(str(key))
+                            
+                            
                         btag = InlineKeyboardButton(text=bl_str, callback_data="lns_" + tag)
                         buttons.append(btag)
 
