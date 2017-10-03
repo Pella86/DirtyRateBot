@@ -21,3 +21,5 @@ ar-IQ
 nl-NL
 es-ES
 en-LB
+ar-EG
+es-AR
