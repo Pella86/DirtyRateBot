@@ -504,9 +504,19 @@ def handle(msg):
 
                     buttons = []
                     for tag in lang_tags:
-
-                        bl_str = get_language_flag(tag)
-
+                        try:
+                            bl_str = get_language_flag(tag)
+                        except KeyError as key:
+                            # if there is a key error there is possibly a 
+                            # language that is not tagged write a file with 
+                            # the language tags that are missing either flags
+                            # or long names
+                            print("Key not found", key)
+                            
+                            with open("./languages/missing_languages.txt", "a") as f:
+                                f.write(str(key))
+                            
+                            
                         btag = InlineKeyboardButton(text=bl_str, callback_data="lns_" + tag)
                         buttons.append(btag)
 
@@ -1393,6 +1403,9 @@ if __name__ == "__main__":
     msg += "- user top chart per category under /top_media\n"
     msg += "- media will lose karma with time, thus the top media chart will have some shuffling, hopefully\n"
     msg += "- translation, see /set_language\n"
+    msg += "\n"
+    msg += "The update is done, if you have more feature to suggest feel free to contact me @PmPellaBot\n"
+    msg += "This bot will shut down, and the updates will be transfered to the @DirtyRateBot"
     msg += "\n"
     msg += "Happy protting."
 
