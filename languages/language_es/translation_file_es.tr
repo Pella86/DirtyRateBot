@@ -39,3 +39,75 @@ mute notification
 Translated String:
 
 
+-----English String:
+<b>- {anon_emoji} User Profile {user_face} {space_shuttle}-</b>
+<i>Your anonymous id is: {anonid}</i>
+Change nickname: /set_nickname
+
+<b>- Current Status -</b>
+Points: {points} | /help_points
+Karma: {karma} | /help_karma
+Reputation points: {rep_points}
+Reputation: {reputation}
+/help_reputation
+<i>To increase your reputation use</i>
+/buy_reputation
+
+<b>- My Uploads -</b>
+You uploaded a total of {nup} media
+Today you uploaded {dup} media
+To see your uploaded media press
+/my_uploads
+
+<b>- Create a category -</b>
+/add_category
+
+<b>--- Users top chart ---</b>
+/user_top
+
+<b>--- Users top chart ---</b>
+/set_language
+
+/main_menu
+
+Translated String:
+
+
+-----English String:
+<b>- Reputation {remoji} -</b>
+The reputation is shown near your username (or anonymous id {anonem}).
+The reputation is calculated by your reputation points (/buy_reputation) times your karma {kemoji} (if karma is positve).
+
+The reputation determines the media's visibility.
+When a person wants to vote, the media are orderd by reputation of the user.
+
+- How do I increase my reputation?
+use the command /buy_reputation
+
+Translated String:
+
+
+-----English String:
+@DirtyRateBot version: {version}
+<i>This bot allows you to upload and rate media with the rest of the bot community.
+The media are divided into categories.</i>
+
+<b>- Rating pictures -</b>
+To rate the media use /categories
+To see the top three media use the /show_top
+
+<b>- Uploading pictures -</b>
+To upload your media see /help_upload.
+
+<b>- Profile -</b>
+You can check your uploads under /profile then /my_uploads.
+You will have a profile with points {pem}, karma {kem} and reputation {rem}.
+See /help_points, /help_karma, /help_reputation
+
+<b>- Super Groups -</b>
+You can use the bot in super group, add it and press the command /vote.
+If you are the admin you can set the categories you want to show /help_supergroups.
+
+Translated String:
+
+

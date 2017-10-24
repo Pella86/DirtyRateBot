@@ -507,16 +507,16 @@ def handle(msg):
                         try:
                             bl_str = get_language_flag(tag)
                         except KeyError as key:
-                            # if there is a key error there is possibly a 
-                            # language that is not tagged write a file with 
+                            # if there is a key error there is possibly a
+                            # language that is not tagged write a file with
                             # the language tags that are missing either flags
                             # or long names
                             print("Key not found", key)
-                            
+
                             with open("./languages/missing_languages.txt", "a") as f:
                                 f.write(str(key))
-                            
-                            
+
+
                         btag = InlineKeyboardButton(text=bl_str, callback_data="lns_" + tag)
                         buttons.append(btag)
 
@@ -939,7 +939,7 @@ def query(msg):
                     categories.user_profile_db.updateDb()
                     break
     elif query_data.startswith("ban_"):
-        userid = "".join(query_data.split("_")[1:])
+        userid = int("".join(query_data.split("_")[1:]))
         if from_id == creator_id:
             duser = categories.user_profile_db.getData(userid)
             user = duser.getData()
@@ -1409,9 +1409,11 @@ if __name__ == "__main__":
     msg += "\n"
     msg += "Happy protting."
 
+    announce.run_daily(categories)
+
     announce.announce_all_users(msg)
 
-    announce.run_daily(categories)
+
 
     print ('Listening ...')
 

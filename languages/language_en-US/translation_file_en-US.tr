@@ -197,3 +197,200 @@ START HERE!!
 Translated String:
 
 
+-----English String:
+You voted all the pictures in this category use
+
+Translated String:
+
+
+-----English String:
+<b>- {anon_emoji} User Profile {user_face} {space_shuttle}-</b>
+<i>Your anonymous id is: {anonid}</i>
+Change nickname: /set_nickname
+
+<b>- Current Status -</b>
+Points: {points} | /help_points
+Karma: {karma} | /help_karma
+Reputation points: {rep_points}
+Reputation: {reputation}
+/help_reputation
+<i>To increase your reputation use</i>
+/buy_reputation
+
+<b>- My Uploads -</b>
+You uploaded a total of {nup} media
+Today you uploaded {dup} media
+To see your uploaded media press
+/my_uploads
+
+<b>- Create a category -</b>
+/add_category
+
+<b>--- Users top chart ---</b>
+/user_top
+
+<b>--- Users top chart ---</b>
+/set_language
+
+/main_menu
+
+Translated String:
+
+
+-----English String:
+Please select one of the languages.
+
+If the bot remains in english, is because the language hasn't been translated yet.
+
+The flags should represent in which country the language is spoken, since I couldnt decide if to put the american flag or the british flag for english.
+
+/main_menu
+
+Translated String:
+
+
+-----English String:
+<b>- karma {kem} -</b>
+The karma is calculated by the number of upvotes {uem} minus the number of downvotes {dem} and multiplied by the number of people {anonem} who voted for your media.
+The karma influences the way the uploaded pictures are presented to the users.
+The more karma you have the better visibility will get your pictures.
+
+- How do I earn karma?
+Upload media to the bot by using the commnad /upload
+
+
+Translated String:
+
+
+-----English String:
+Message must be text
+
+Translated String:
+
+
+-----English String:
+<b>- Points {pemoji} -</b>
+You earn +{1 point} when you vote and +{5 points} when you /upload.
+When somebody upvotes your content you earn +{1 point} but you lose -{1 point} if somebody downvotes.
+Points are used to increase your reputation {remoji} (/buy_reputation), which increases the visibility of your media.
+
+
+Translated String:
+
+
+-----English String:
+No media in this category
+
+Translated String:
+
+
+-----English String:
+<b>- Reputation {remoji} -</b>
+The reputation is shown near your username (or anonymous id {anonem}).
+The reputation is calculated by your reputation points (/buy_reputation) times your karma {kemoji} (if karma is positve).
+
+The reputation determines the media's visibility.
+When a person wants to vote, the media are orderd by reputation of the user.
+
+- How do I increase my reputation?
+use the command /buy_reputation
+
+Translated String:
+
+
+-----English String:
+Send a category name
+<i>The name must be maximum 15 characters long and can contain only alphanumeric characters (a-z and A-Z and 1-10)</i>
+
+Create a category will cost {price} you have {points}
+/cancel
+
+
+Translated String:
+
+
+-----English String:
+Select a tag for the category
+<i>Your category will be banned if you have for example porn in a safe for work (SFW-tag category</i>
+This action will cost you {price}
+
+category: {catname}
+
+/main_menu
+
+Translated String:
+
+
+-----English String:
+You don't have enough money, /help_points
+
+Translated String:
+
+
+-----English String:
+You hobo
+
+Translated String:
+
+
+-----English String:
+Media already in database
+
+Translated String:
+
+
+-----English String:
+Operation aborted (must be text and not a command) /add_category again or /main_menu
+
+Translated String:
+
+
+-----English String:
+This [{character}] symbol cannot be used in name
+ /main_menu
+
+Translated String:
+
+
+-----English String:
+Category not found
+You can add the category using /add_category
+
+Translated String:
+
+
+-----English String:
+Name not valid (either character or category already present) /add_category again or /main_menu
+
+Translated String:
+
+
+-----English String:
+Category successfully created
+/main_menu
+
+Translated String:
+
+
+-----English String:
+Category Created
+
+Translated String:
+
+
+-----English String:
+<b>- Upload media -
+</b>Use the command /upload to upload media to the bot.
+The bot will ask for a media (can be a picture, gif, video or document)
+The bot will ask for a category
+If the bot says success, you made it
+
+Translated String:
+
+
+-----English String:
+Nickname must be over 3 char and below 15 char
+
+Translated String:
+
+

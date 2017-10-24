@@ -5,3 +5,123 @@ mute notification
 Translated String:
 
 
+-----English String:
+Please select one of the languages.
+
+If the bot remains in english, is because the language hasn't been translated yet.
+
+The flags should represent in which country the language is spoken, since I couldnt decide if to put the american flag or the british flag for english.
+
+/main_menu
+
+Translated String:
+
+
+-----English String:
+<b>- {anon_emoji} User Profile {user_face} {space_shuttle}-</b>
+<i>Your anonymous id is: {anonid}</i>
+Change nickname: /set_nickname
+
+<b>- Current Status -</b>
+Points: {points} | /help_points
+Karma: {karma} | /help_karma
+Reputation points: {rep_points}
+Reputation: {reputation}
+/help_reputation
+<i>To increase your reputation use</i>
+/buy_reputation
+
+<b>- My Uploads -</b>
+You uploaded a total of {nup} media
+Today you uploaded {dup} media
+To see your uploaded media press
+/my_uploads
+
+<b>- Create a category -</b>
+/add_category
+
+<b>--- Users top chart ---</b>
+/user_top
+
+<b>--- Users top chart ---</b>
+/set_language
+
+/main_menu
+
+Translated String:
+
+
+-----English String:
+<b> prot --- Main Menu --- prot </b>
+<i>Choose a category to see or vote the pictures, media, belonging to it</i>
+
+<b>--- Category ---</b>
+START HERE!!
+/categories
+
+<b>--- Top users and media ---</b>
+<i>The top chart of media and users by category</i>
+/top_media
+
+<b>--- Profile ---</b>
+<i>Your profile containing the information about points </i>
+/profile
+
+<b>--- Upload ---</b>
+<i>Upload your media to the bot</i>
+/upload
+
+<b>--- HELP ---</b>
+/help
+
+
+
+Translated String:
+
+
+-----English String:
+<b>- Points {pemoji} -</b>
+You earn +{1 point} when you vote and +{5 points} when you /upload.
+When somebody upvotes your content you earn +{1 point} but you lose -{1 point} if somebody downvotes.
+Points are used to increase your reputation {remoji} (/buy_reputation), which increases the visibility of your media.
+
+
+Translated String:
+
+
+-----English String:
+<b>- karma {kem} -</b>
+The karma is calculated by the number of upvotes {uem} minus the number of downvotes {dem} and multiplied by the number of people {anonem} who voted for your media.
+The karma influences the way the uploaded pictures are presented to the users.
+The more karma you have the better visibility will get your pictures.
+
+- How do I earn karma?
+Upload media to the bot by using the commnad /upload
+
+
+Translated String:
+
+
+-----English String:
+<b>--- Buy reputation ---</b>
+<i>Higher reputation ensures your media will be shown first, namely more reputation,  more points</i>
+
+You currently have {rep_points}
+You a karma of {karma}
+This generates a reputation of {rep}
+Reputation formula:
+ <code>karma * reputation points</code>
+
+You have {points} points
+Vould you like to buy more RP?
+
+
+Translated String:
+
+
+-----English String:
+Buy {qrp} for {points}
+
+Translated String:
+
+

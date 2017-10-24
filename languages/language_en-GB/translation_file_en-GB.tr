@@ -371,3 +371,49 @@ To see your uploaded media press
 Translated String:
 
 
+-----English String:
+<b>- Reputation {remoji} -</b>
+The reputation is shown near your username (or anonymous id {anonem}).
+The reputation is calculated by your reputation points (/buy_reputation) times your karma {kemoji} (if karma is positve).
+
+The reputation determines the media's visibility.
+When a person wants to vote, the media are orderd by reputation of the user.
+
+- How do I increase my reputation?
+use the command /buy_reputation
+
+Translated String:
+
+
+-----English String:
+Message must be text
+
+Translated String:
+
+
+-----English String:
+<b>- karma {kem} -</b>
+The karma is calculated by the number of upvotes {uem} minus the number of downvotes {dem} and multiplied by the number of people {anonem} who voted for your media.
+The karma influences the way the uploaded pictures are presented to the users.
+The more karma you have the better visibility will get your pictures.
+
+- How do I earn karma?
+Upload media to the bot by using the commnad /upload
+
+
+Translated String:
+
+
+-----English String:
+Category not found
+You can add the category using /add_category
+
+Translated String:
+
+
+-----English String:
+Name not valid (either character or category already present) /add_category again or /main_menu
+
+Translated String:
+
+
