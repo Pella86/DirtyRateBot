@@ -1,8 +1,396 @@
+-----English String:
+<b> prot --- Main Menu --- prot </b>
+<i>Choose a category to see or vote the pictures, media, belonging to it</i>
+
+<b>--- Category ---</b>
+START HERE!!
+/categories
+
+<b>--- Top users and media ---</b>
+<i>The top chart of media and users by category</i>
+/top_media
+
+<b>--- Profile ---</b>
+<i>Your profile containing the information about points </i>
+/profile
+
+<b>--- Upload ---</b>
+<i>Upload your media to the bot</i>
+/upload
+
+<b>--- HELP ---</b>
+/help
+
+
+
+Translated String:
+<b> prot --- Hoofdmenu --- prot </b>
+<i>Kies een categorie om te zien of om op te stemmen</i>
+
+<b>--- Categorie ---</b>
+BEGIN HIER!!
+/categories
+
+<b>--- Top gebruikers en media ---</b>
+<i>Ranglijst van media en gebruikers</i>
+/top_media
+
+<b>--- Profiel ---</b>
+<i>Jouw profiel met informatie over punten</i>
+/profile
+
+<b>--- Uploaden ---</b>
+<i>Upload jouw media naar de bot</i>
+/upload
+
+<b>--- HELP ---</b>
+/help
+
+
 
 -----English String:
 mute notification 
 
 Translated String:
+Meldingen dempen
+
+
+-----English String:
+You voted all the pictures in this category use
+
+Translated String:
+Je hebt op alle foto's in deze categorie gestemd, gebruik 
+
+
+-----English String:
+<b> prot --- Main Menu --- prot </b>
+<i>Choose a category to see or vote the pictures, media, belonging to it</i>
+
+<b>--- Category ---</b>
+START HERE!!
+/categories
+
+<b>--- Top users and media ---</b>
+<i>The top chart of media and users by category</i>
+/top_media
+
+<b>--- Profile ---</b>
+<i>Your profile containing the information about points </i>
+/profile
+
+<b>--- Upload ---</b>
+<i>Upload your media to the bot</i>
+/upload
+
+<b>--- HELP ---</b>
+/help
+
+
+
+Translated String:
+<b> prot --- Hoofdmenu --- prot </b>
+<i>Kies een categorie om te zien of om op te stemmen</i>
+
+<b>--- Categorie ---</b>
+BEGIN HIER!!
+/categories
+
+<b>--- Top gebruikers en media ---</b>
+<i>Ranglijst van media en gebruikers</i>
+/top_media
+
+<b>--- Profiel ---</b>
+<i>Jouw profiel met informatie over punten</i>
+/profile
+
+<b>--- Uploaden ---</b>
+<i>Upload jouw media naar de bot</i>
+/upload
+
+<b>--- HELP ---</b>
+/help
+
+
+-----English String:
+@DirtyRateBot version: {version}
+<i>This bot allows you to upload and rate media with the rest of the bot community.
+The media are divided into categories.</i>
+
+<b>- Rating pictures -</b>
+To rate the media use /categories
+To see the top three media use the /show_top
+
+<b>- Uploading pictures -</b>
+To upload your media see /help_upload.
+
+<b>- Profile -</b>
+You can check your uploads under /profile then /my_uploads.
+You will have a profile with points {pem}, karma {kem} and reputation {rem}.
+See /help_points, /help_karma, /help_reputation
+
+<b>- Super Groups -</b>
+You can use the bot in super group, add it and press the command /vote.
+If you are the admin you can set the categories you want to show /help_supergroups.
+
+Translated String:
+@DirtyRateBot versie: {version}
+<i>Met deze kan je media uploaden en beoordelen met de rest van de botgemeenschap</i>
+
+<b>- Stemmen op foto's -</b>
+Om op media te stemmen, gebruik /categories
+Om de top 3 te zien, gebruik / show_top
+
+<b>- Foto's uploaden -</b>
+Voor hulp bij het uploaden, gebruik /help_upload.
+
+<b>- Profiel -</b>
+Je kan je uploads bekijken onder /profile en dan /my_uploads.
+Je hebt dan een profiel met punten {pem}, karma {kem} en reputatie {rem}.
+Zie /help_points, /help_karma, /help_reputation voor meer uitleg.
+
+<b>- Supergroepen -</b>
+Je kan deze bot toevoegen aan supergroepen en /vote gebruiken.
+Als administrator kan je de getoonde groepen instellen met /help_supergroups.
+
+
+
+-----English String:
+<b>- Upload media -
+</b>Use the command /upload to upload media to the bot.
+The bot will ask for a media (can be a picture, gif, video or document)
+The bot will ask for a category
+If the bot says success, you made it
+
+Translated String:
+<b>- Upload media -
+</b>Gebruik /upload om media naar de bot te uploaden.
+De bot vraagt om media (kan een foto, gif, video of document zijn).
+Vervolgens vraagt de bot een categorie.
+Als de bot 'success' zegt is het gelukt.
+
+
+-----English String:
+<b>- {anon_emoji} User Profile {user_face} {space_shuttle}-</b>
+<i>Your anonymous id is: {anonid}</i>
+Change nickname: /set_nickname
+
+<b>- Current Status -</b>
+Points: {points} | /help_points
+Karma: {karma} | /help_karma
+Reputation points: {rep_points}
+Reputation: {reputation}
+/help_reputation
+<i>To increase your reputation use</i>
+/buy_reputation
+
+<b>- My Uploads -</b>
+You uploaded a total of {nup} media
+Today you uploaded {dup} media
+To see your uploaded media press
+/my_uploads
+
+<b>- Create a category -</b>
+/add_category
+
+<b>--- Users top chart ---</b>
+/user_top
+
+/main_menu
+
+Translated String:
+<b>- {anon_emoji} Gebruikersprofiel {user_face} {space_shuttle}-</b>
+<i>Je anonieme ID is: {anonid}</i>
+Verander nickname: /set_nickname
+
+<b>- Huidige status -</b>
+Punten: {points} | /help_points
+Karma: {karma} | /help_karma
+Reputatiepunten: {rep_points}
+Reputatie: {reputation}
+/help_reputation
+<i>Om je reputatie te verhogen, gebruik</i>
+/buy_reputation
+
+<b>- Mijn uploads -</b>
+Je hebt in totaal {nup} media ge�pload
+Vandaag heb je {dup} media ge�pload
+Om je ge�ploade media te zien, gebruik
+/my_uploads
+
+<b>- Maak een categorie -</b>
+/add_category
+
+<b>--- Gebruikers ranglijst ---</b>
+/user_top
+
+/main_menu
+
+
+-----English String:
+<b>- Points {pemoji} -</b>
+You earn +{1 point} when you vote and +{5 points} when you /upload.
+When somebody upvotes your content you earn +{1 point} but you lose -{1 point} if somebody downvotes.
+Points are used to increase your reputation {remoji} (/buy_reputation), which increases the visibility of your media.
+
+
+Translated String:
+<b>- Punten {pemoji} -</b>
+Je krijgt +{1 point} als je stemt en +{5 points} wanneer je /upload.
+Wanneer iemand je media upvote krijg je +{1 point} maar je verliest -{1 point} als iemand downvote.
+Punten kan je gebruiken om je reputatie te vergroten {remoji} (/buy_reputation), waardoor de zichtbaarheid van je media wordt vergroot.
+
+
+
+-----English String:
+Send a category name
+<i>The name must be maximum 15 characters long and can contain only alphanumeric characters (a-z and A-Z and 1-10)</i>
+
+Create a category will cost {price} you have {points}
+/cancel
+
+
+Translated String:
+Stuur een categorienaam
+<i>De naam mag maximaal 15 tekens lang zijn en alleen alfanummerieke karakters bevatten (a-z, A-Z en 1-10)</i>
+
+Een categorie maken kost {price} en je hebt {points}
+/cancel
+
+
+
+-----English String:
+Select a tag for the category
+<i>Your category will be banned if you have for example porn in a safe for work (SFW-tag category</i>
+This action will cost you {price}
+
+category: {catname}
+
+/main_menu
+
+Translated String:
+Kies een tag voor je categorie (SFW/NSFW)
+<i>Je categorie wordt verwijderd als je bijvoorbeeld porno in een SFW (safe for work) categorie hebt</i>
+Deze actie kost {price}
+
+categorie: {catname}
+
+/main_menu
+
+
+-----English String:
+Category successfully created
+/main_menu
+
+Translated String:
+Categorie aangemaakt
+/main_menu
+
+
+-----English String:
+Category Created
+
+Translated String:
+Category aangemaakt
+
+
+-----English String:
+No media in this category
+
+Translated String:
+Geen media in deze categorie
+
+
+-----English String:
+The media will be uploaded underthe category you chose:
+Send category name:
+
+Translated String:
+De media wordt ge�pload onder de door jouw gekozen categorie:
+Stuur de gewenste categorienaam:
+
+
+-----English String:
+Content uploaded successfully
+
+Translated String:
+Upload geslaagd
+
+
+-----English String:
+Media already in database
+
+Translated String:
+Media bestaat al in de database
+
+
+-----English String:
+<b>--- Buy reputation ---</b>
+<i>Higher reputation ensures your media will be shown first, namely more reputation,  more points</i>
+
+You currently have {rep_points}
+You a karma of {karma}
+This generates a reputation of {rep}
+Reputation formula:
+ <code>karma * reputation points</code>
+
+You have {points} points
+Vould you like to buy more RP?
+
+
+Translated String:
+<b>--- Koop reputatie ---</b>
+<i>Hogere reputatie zorgt er voor dat je media eerder wordt getoond: meer reputatie is meer punten</i>
+
+Je hebt nu {rep_points}
+Je karma is {karma}
+Dit geeft een reputatie van {rep}
+Reputatie wordt berekend als:
+ <code>karma * reputatiepunten</code>
+
+Je hebt {points} punten
+Wil je meer RP kopen?
+
+
+
+-----English String:
+Buy {qrp} for {points}
+
+Translated String:
+Koop {qrp} voor {points}
+
+
+-----English String:
+Calculate media probability (not working)
+
+Translated String:
+Bereken media kans (werkt momenteel niet)
+
+
+-----English String:
+Please send your nickname, the nickname must be minumum 3 characters and maximum 15, it can contain only alphanumeric characters (a-z, A-Z, 0-9)
+
+Translated String:
+Stuur je nieuwe nickname, deze moet minimaal 3 tekens en maximaal 15 tekens lang zijn en mag alleen alfanummerieke karakters bevatten (a-z, A-Z, 0-9)
+
+
+-----English String:
+This [{character}] symbol cannot be used in name
+ /main_menu
+
+Translated String:
+Dit [{character}] teken kan niet in een naam gebruikt worden
+ /main_menu
+
+
+
+-----English String:
+Nickname changed successfully
+ /main_menu
+
+Translated String:
+Nickname succesvol veranderd
+ /main_menu
+
 
 
 -----English String:
